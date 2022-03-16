@@ -1,4 +1,5 @@
 import argparse
+import logging
 from random import randint, uniform
 
 # Constants
@@ -64,11 +65,15 @@ def generate_users_and_ips_file(filepath_users, filepath_ip, users_number, min_u
     :param max_user_id: biggest possible user id
     :return: nothing
     """
+    logging.info("Started generating users and ips files")
+
     with open(filepath_users, "w+") as file_users, open(filepath_ip, "w+") as file_ips:
         for i in range(users_number):
             user = generate_user(min_user_id, max_user_id, min_devices_number, max_devices_number)
             write_user(file_users, user)
             write_devices(file_ips, user[1], user[2])
+
+    logging.info("Finished generating users and ips files")
 
 
 def generate_items(filepath, items_number, min_item_id, max_item_id, min_item_price, max_item_price):
@@ -82,9 +87,14 @@ def generate_items(filepath, items_number, min_item_id, max_item_id, min_item_pr
     :param max_item_price: biggest possible item price
     :return: nothing
     """
+    logging.info("Started generating items files")
+
     with open(filepath, "w+") as file:
         for i in range(items_number):
             write_item_to_file(generate_item(min_item_id, max_item_id, min_item_price, max_item_price), file)
+
+    logging.info("Finished generating items files")
+
 
 
 def generate_user(min_user_id, max_user_id, min_devices_number, max_devices_number):
@@ -243,7 +253,14 @@ def parse_arguments():
     return args_parser.parse_args()
 
 
+def set_up_logging():
+    logging.basicConfig(format='%(asctime)s - %(levelname)s [%(name)s] [%(funcName)s():%(lineno)s] - %(message)s',
+                        level=logging.INFO)
+
+
 def __main__():
+    set_up_logging()
+
     args = parse_arguments()
 
     generate_users_and_ips_file("users.csv", "ips.csv", args.users_number, args.min_user_id, args.max_user_id,
