@@ -1,24 +1,9 @@
+import argparse
 import datetime
 import random
-import sys
-import time
 
 import pandas
 from dateutil import parser
-
-# Defaults
-DELAY_INTERVAL_IN_SECONDS_DEFAULT = 5
-VIEWS_TO_GENERATE_DEFAULT = 10_000
-PURCHASES_TO_GENERATE_DEFAULT = 40
-VIEWS_FRACTION_DEFAULT = 0.2
-MIN_SECONDS_DELTA_DEFAULT = 0
-MAX_SECONDS_DELTA_DEFAULT = 60
-MIN_MINUTES_DELTA_DEFAULT = 0
-MAX_MINUTES_DELTA_DEFAULT = 60
-
-# Implementation
-
-args = {}
 
 
 def load_users(filepath):
@@ -39,9 +24,7 @@ def load_items(filepath):
     return pandas.read_csv(filepath, names=["item_id", "item_amount", "item_price"])
 
 
-def generate_random_timedelta(min_seconds_delta=MIN_SECONDS_DELTA_DEFAULT, max_seconds_delta=MAX_SECONDS_DELTA_DEFAULT,
-                              min_minutes_delta=MIN_MINUTES_DELTA_DEFAULT, max_minutes_delta=MAX_MINUTES_DELTA_DEFAULT,
-                              **kwargs):
+def generate_random_timedelta(min_seconds_delta, max_seconds_delta, min_minutes_delta, max_minutes_delta):
     """
     Generates random time delta
     :param min_seconds_delta: lowest possible amount of seconds
@@ -54,61 +37,101 @@ def generate_random_timedelta(min_seconds_delta=MIN_SECONDS_DELTA_DEFAULT, max_s
                               seconds=random.randint(min_seconds_delta, max_seconds_delta))
 
 
-def get_current_time_with_random_delta():
+def get_current_time_with_random_delta(min_seconds_delta, max_seconds_delta, min_minutes_delta, max_minutes_delta):
     """
     Takes current time and applies some delta on it
+    :param min_seconds_delta: lowest possible amount of seconds
+    :param max_seconds_delta: biggest possible amount of seconds
+    :param min_minutes_delta: lowest possible amount of minutes
+    :param max_minutes_delta: biggest possible amount of minutest
+
     :return: current time moved on some time delta
     """
-    return datetime.datetime.now() + generate_random_timedelta(**args) * (1 if random.randint(0, 1) == 1 else -1)
+    return datetime.datetime.now() + \
+           generate_random_timedelta(min_seconds_delta,
+                                     max_seconds_delta,
+                                     min_minutes_delta,
+                                     max_minutes_delta) \
+           * (1 if random.randint(0, 1) == 1 else -1)
 
 
-def generate_views(users, items, view_number=VIEWS_TO_GENERATE_DEFAULT, **kwargs):
+def generate_views(users, items, views_number, users_fraction, item_fraction, min_seconds_delta, max_seconds_delta,
+                   min_minutes_delta, max_minutes_delta):
     """
     Generates table of views
+    :param item_fraction: fraction of users that will be in views and purchases generation
+    :param users_fraction: fraction of items that will be in views and purchases generation
     :param users: pandas DataFrame that contains all users
     :param items: pandas DataFrame that contains all items
-    :param view_number: number of views to generate
+    :param views_number: number of views to generate
     :return:
     """
-    view = users.sample(view_number)
-    view["item_id"] = items.sample(view_number)["item_id"].values
-    view["ts"] = [get_current_time_with_random_delta() for _ in range(view_number)]
+    view = users.sample(frac=users_fraction) \
+        .join(items["item_id"].sample(frac=item_fraction), how="cross").sample(views_number)
+    view["ts"] = \
+        [get_current_time_with_random_delta(min_seconds_delta, max_seconds_delta, min_minutes_delta, max_minutes_delta)
+         for _ in range(views_number)]
     return view
 
 
-def generate_purchases(views, purchases_to_generate=PURCHASES_TO_GENERATE_DEFAULT, **kwargs):
+def generate_purchases(views, purchases_number, min_seconds_delta, max_seconds_delta, min_minutes_delta,
+                       max_minutes_delta):
     """
     Generates purchases based on generated views
     :param views: pandas DataFrame that contains all views
-    :param purchases_to_generate: number of purchases to generate
+    :param purchases_number: number of purchases to generate
+    :param min_seconds_delta: lowest possible amount of seconds
+    :param max_seconds_delta: biggest possible amount of seconds
+    :param min_minutes_delta: lowest possible amount of minutes
+    :param max_minutes_delta: biggest possible amount of minutest
     :return: pandas DataFrame that contains generated purchases
     """
-    purchases = views.sample(purchases_to_generate)
-    purchases["ts"] = [parser.parse(str(time)) + generate_random_timedelta(**args) for time in purchases["ts"].values]
+    purchases = views.sample(purchases_number)
+    purchases["ts"] = \
+        [parser.parse(str(time)) + generate_random_timedelta(min_seconds_delta, max_seconds_delta, min_minutes_delta,
+                                                             max_minutes_delta) for time in purchases["ts"].values]
     return purchases
 
 
-def parse_arguments():
+def parse_args():
     """
-    Parses parameter from CLI
-    :return: nothing
+    Parses arguments from CLI
+    :return: parsed arguments
     """
-    for i in range(1, len(sys.argv), 2):
-        args[sys.argv[i]] = int(sys.argv[i + 1])
+    args_parser = argparse.ArgumentParser(description='Dynamic generator')
+    args_parser.add_argument("--views_number", default=10_000, help="Views to generate",
+                             dest="views_number")
+    args_parser.add_argument("--purchases_number", default=40, help="Purchases to generate",
+                             dest="purchases_number")
+    args_parser.add_argument("--min_seconds_delta", default=0, help="Minimal delta between seconds",
+                             dest="min_seconds_delta")
+    args_parser.add_argument("--max_seconds_delta", default=60, help="Maximal delta between seconds",
+                             dest="max_seconds_delta")
+    args_parser.add_argument("--min_minutes_delta", default=0, help="Minimal delta between minutes",
+                             dest="min_minutes_delta")
+    args_parser.add_argument("--max_minutes_delta", default=60, help="Maximal delta between minutes",
+                             dest="max_minutes_delta")
+    args_parser.add_argument("--users_fraction", default=0.3,
+                             help="Fraction of users that will be in views and purchases generation",
+                             dest="users_fraction")
+    args_parser.add_argument("--item_fraction", default=0.3,
+                             help="Fraction of items that will be in views and purchases generation",
+                             dest="item_fraction")
+
+    return args_parser.parse_args()
 
 
 def __main__():
-    while True:
-        parse_arguments()
-        print(args)
-        views = generate_views(load_users("users.csv"),
-                               load_items("items.csv"), **args)
-        purchases = generate_purchases(views, **args)
+    args = parse_args()
 
-        print(views)
-        print(purchases)
+    views = generate_views(load_users("users.csv"), load_items("items.csv"), args.views_number, args.users_fraction,
+                           args.item_fraction, args.min_seconds_delta, args.max_seconds_delta, args.min_minutes_delta,
+                           args.max_minutes_delta)
+    purchases = generate_purchases(views, args.purchases_number, args.min_seconds_delta, args.max_seconds_delta,
+                                   args.min_minutes_delta, args.max_minutes_delta)
 
-        time.sleep(DELAY_INTERVAL_IN_SECONDS_DEFAULT)
+    views.to_csv("views.csv", index=False)
+    purchases.to_csv("purchases.csv", index=False)
 
 
 if __name__ == "__main__":
