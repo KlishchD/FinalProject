@@ -35,12 +35,11 @@ def generate_random_timedelta(min_seconds_delta, max_seconds_delta, min_minutes_
 
 def get_current_time_with_random_delta(min_seconds_delta, max_seconds_delta, min_minutes_delta, max_minutes_delta):
     """
-    Takes current time and applies some delta on it
+    Generates random time from current time by applying random time delta on it
     :param min_seconds_delta: lowest possible amount of seconds
     :param max_seconds_delta: biggest possible amount of seconds
     :param min_minutes_delta: lowest possible amount of minutes
     :param max_minutes_delta: biggest possible amount of minutest
-
     :return: current time moved on some time delta
     """
     return datetime.datetime.now() + \
@@ -49,6 +48,21 @@ def get_current_time_with_random_delta(min_seconds_delta, max_seconds_delta, min
                                      min_minutes_delta,
                                      max_minutes_delta) \
            * (1 if random.randint(0, 1) == 1 else -1)
+
+
+def add_random_delta(times, min_seconds_delta, max_seconds_delta, min_minutes_delta, max_minutes_delta):
+    """
+    Generates array with times from original one, but moved on some random time delta
+    :param times:
+    :param min_seconds_delta: lowest possible amount of seconds
+    :param max_seconds_delta: biggest possible amount of seconds
+    :param min_minutes_delta: lowest possible amount of minutes
+    :param max_minutes_delta: biggest possible amount of minutest
+
+    :return: current time moved on some time delta
+    """
+    return [parser.parse(str(time)) + generate_random_timedelta(min_seconds_delta, max_seconds_delta, min_minutes_delta,
+                                                                max_minutes_delta) for time in times]
 
 
 def generate_views(users, items, views_number, users_fraction, item_fraction, min_seconds_delta, max_seconds_delta,
@@ -64,15 +78,19 @@ def generate_views(users, items, views_number, users_fraction, item_fraction, mi
     """
     logging.info("Started generating views")
 
-    view = users.sample(frac=users_fraction) \
-        .join(items["item_id"].sample(frac=item_fraction), how="cross").sample(views_number)
-    view["ts"] = \
+    users_sample = users.sample(frac=users_fraction)
+    items_id_sample = items["item_id"].sample(frac=item_fraction)
+
+    joined = users_sample.join(items_id_sample, how="cross")
+    views = joined.sample(views_number)
+
+    views["ts"] = \
         [get_current_time_with_random_delta(min_seconds_delta, max_seconds_delta, min_minutes_delta, max_minutes_delta)
          for _ in range(views_number)]
 
     logging.info("Finished generating views")
 
-    return view
+    return views
 
 
 def generate_purchases(views, purchases_number, min_seconds_delta, max_seconds_delta, min_minutes_delta,
@@ -91,9 +109,8 @@ def generate_purchases(views, purchases_number, min_seconds_delta, max_seconds_d
     logging.info("Started generating purchases")
 
     purchases = views.sample(purchases_number)
-    purchases["ts"] = \
-        [parser.parse(str(time)) + generate_random_timedelta(min_seconds_delta, max_seconds_delta, min_minutes_delta,
-                                                             max_minutes_delta) for time in purchases["ts"].values]
+    purchases["ts"] = add_random_delta(purchases["ts"].values, min_seconds_delta, max_seconds_delta,
+                                       min_minutes_delta, max_minutes_delta)
 
     logging.info("Finished generating purchases")
 
