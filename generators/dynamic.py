@@ -42,12 +42,10 @@ def get_current_time_with_random_delta(min_seconds_delta, max_seconds_delta, min
     :param max_minutes_delta: biggest possible amount of minutest
     :return: current time moved on some time delta
     """
-    return datetime.datetime.now() + \
-           generate_random_timedelta(min_seconds_delta,
-                                     max_seconds_delta,
-                                     min_minutes_delta,
-                                     max_minutes_delta) \
-           * (1 if random.randint(0, 1) == 1 else -1)
+    time = datetime.datetime.now()
+    delta = generate_random_timedelta(min_seconds_delta, max_seconds_delta, min_minutes_delta, max_minutes_delta)
+    sign = 1 if random.randint(0, 1) == 1 else -1
+    return time + delta * sign
 
 
 def add_random_delta(times, min_seconds_delta, max_seconds_delta, min_minutes_delta, max_minutes_delta):
@@ -61,8 +59,13 @@ def add_random_delta(times, min_seconds_delta, max_seconds_delta, min_minutes_de
 
     :return: current time moved on some time delta
     """
-    return [parser.parse(str(time)) + generate_random_timedelta(min_seconds_delta, max_seconds_delta, min_minutes_delta,
-                                                                max_minutes_delta) for time in times]
+    result = []
+    for time in times:
+        time = parser.parse(str(time))
+        delta = generate_random_timedelta(min_seconds_delta, max_seconds_delta, min_minutes_delta, max_minutes_delta)
+        result.append(time + delta)
+
+    return result
 
 
 def generate_views(users, items, views_number, users_fraction, item_fraction, min_seconds_delta, max_seconds_delta,
@@ -74,6 +77,10 @@ def generate_views(users, items, views_number, users_fraction, item_fraction, mi
     :param users: pandas DataFrame that contains all users
     :param items: pandas DataFrame that contains all items
     :param views_number: number of views to generate
+    :param min_seconds_delta: lowest possible amount of seconds
+    :param max_seconds_delta: biggest possible amount of seconds
+    :param min_minutes_delta: lowest possible amount of minutes
+    :param max_minutes_delta: biggest possible amount of minutest
     :return: pandass DataFrame that contains views
     """
     logging.info("Started generating views")
@@ -84,9 +91,13 @@ def generate_views(users, items, views_number, users_fraction, item_fraction, mi
     joined = users_sample.join(items_id_sample, how="cross")
     views = joined.sample(views_number)
 
-    views["ts"] = \
-        [get_current_time_with_random_delta(min_seconds_delta, max_seconds_delta, min_minutes_delta, max_minutes_delta)
-         for _ in range(views_number)]
+    times = []
+    for _ in range(views_number):
+        time = get_current_time_with_random_delta(min_seconds_delta, max_seconds_delta,
+                                                  min_minutes_delta, max_minutes_delta)
+        times.append(time)
+
+    views["ts"] = times
 
     logging.info("Finished generating views")
 
@@ -146,6 +157,10 @@ def parse_args():
 
 
 def set_up_logging():
+    """
+    Sets up loging output format
+    :return: nothing
+    """
     logging.basicConfig(format='%(asctime)s - %(levelname)s [%(name)s] [%(funcName)s():%(lineno)s] - %(message)s',
                         level=logging.INFO)
 
@@ -167,7 +182,6 @@ def __main__():
     set_up_logging()
 
     args = parse_args()
-
     users = load("users.csv", ["user_id", "device", "ip"])
     items = load("items.csv", ["item_id", "item_amount", "item_price"])
 

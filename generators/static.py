@@ -2,8 +2,6 @@ import argparse
 import logging
 from random import randint, uniform
 
-from resources import COUNTRIES, DEVICES
-
 USED_ITEM_ID = {-1}
 
 USED_USER_ID = {-1}
@@ -16,11 +14,18 @@ def load_countries(filepath):
     :param filepath: path to countries file
     :return: array with loaded countries
     """
-    result = []
-    for line in open(filepath):
-        result.extend(line.split(","))
+    global COUNTRIES
+    COUNTRIES = [line.strip() for line in open(filepath)]
 
-    return result
+
+def load_devices(filepath):
+    """
+    Loads devices from the file
+    :param filepath: path to devices file
+    :return: array with loaded devices
+   """
+    global DEVICES
+    DEVICES = [line.strip() for line in open(filepath)]
 
 
 def generate_users_and_ips_file(filepath_users, filepath_ip, users_number, min_user_id, max_user_id, min_devices_number,
@@ -102,8 +107,11 @@ def generate_devices(min_devices_number, max_devices_number):
     :param max_devices_number: biggest possible number of devices
     :return: list of tuples that represent devices
     """
-    return [(DEVICES[randint(0, len(DEVICES) - 1)], generate_random_ip()) for _ in
-            range(randint(min_devices_number, max_devices_number))]
+    devices = []
+    for _ in range(randint(min_devices_number, max_devices_number)):
+        devices.append((DEVICES[randint(0, len(DEVICES) - 1)], generate_random_ip()))
+
+    return devices
 
 
 def generate_random_ip():
@@ -231,13 +239,16 @@ def set_up_logging():
 def __main__():
     set_up_logging()
 
+    load_devices("resources/devices.txt")
+    load_countries("resources/countries.txt")
+
     args = parse_arguments()
 
     generate_users_and_ips_file("users.csv", "ips.csv", args.users_number, args.min_user_id, args.max_user_id,
                                 args.min_devices_number, args.max_devices_number)
 
-    generate_items("items.csv", args.items_number, args.min_item_id, args.max_item_id, args.min_item_price,
-                   args.max_item_price)
+    generate_items("items.csv", args.items_number, args.min_item_id, args.max_item_id,
+                   args.min_item_price, args.max_item_price)
 
 
 if __name__ == "__main__":
