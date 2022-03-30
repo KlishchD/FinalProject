@@ -1,0 +1,129 @@
+version: "3"
+
+services:
+  postgres:
+    image: "postgres:latest"
+    container_name: "postgres-airflow"
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./airflow_data/postgres:/var/lib/postgresql/data
+  db:
+    image: "postgres:latest"
+    container_name: "postgres"
+    restart: always
+    command:
+      - -p 3030
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+    ports:
+      - "3030:3030"
+  adminer:
+    image: adminer
+    container_name: "adminer"
+    restart: always
+    ports:
+      - "8080:8080"
+  webserver:
+    build: .
+    container_name: "webserver"
+    command:
+      - webserver
+      - -p
+      - "8000"
+    entrypoint: airflow
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./airflow:/usr/local/airflow
+    depends_on:
+      - postgres
+  scheduler:
+    build: .
+    container_name: "scheduler"
+    restart: always
+    depends_on:
+      - postgres
+    volumes:
+      - ./airflow:/usr/local/airflow
+    entrypoint: airflow scheduler
+  worker_1:
+    build: .
+    container_name: "worker1"
+    restart: always
+    depends_on:
+      - postgres
+    volumes:
+      - ./airflow:/usr/local/airflow
+    entrypoint: airflow celery worker -q db_update_queue --pid /usr/local/airflow/w1.pid
+    healthcheck:
+      test: [ "CMD-SHELL", "[ -f /usr/local/airflow/w1.pid ]" ]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+  worker_2:
+    build: .
+    container_name: "worker2"
+    restart: always
+    depends_on:
+      - postgres
+    volumes:
+      - ./airflow/:/usr/local/airflow
+    entrypoint: airflow celery worker -q db_update_queue --pid /usr/local/airflow/w2.pid
+    healthcheck:
+      test: [ "CMD-SHELL", "[ -f /usr/local/airflow/w2.pid ]" ]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+  worker_3:
+    build: .
+    container_name: "worker3"
+    restart: always
+    depends_on:
+      - postgres
+    volumes:
+      - ./airflow:/usr/local/airflow
+    entrypoint: airflow celery worker --pid /usr/local/airflow/w3.pid
+    healthcheck:
+      test: [ "CMD-SHELL", "[ -f /usr/local/airflow/w3.pid ]" ]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+  flower:
+    build: .
+    container_name: "flower"
+    restart: always
+    depends_on:
+      - postgres
+    volumes:
+      - ./airflow:/usr/local/airflow
+    entrypoint: airflow celery flower
+    ports:
+      - "5555:5555"
+  vault:
+    image: vault:latest
+    container_name: "vault"
+    environment:
+      - VAULT_ADDR=http://127.0.0.1:8200
+      - VAULT_API_ADDR=http://127.0.0.1:8200
+      - VAULT_ADDRESS=http://127.0.0.1:8200
+      - VAULT_DEV_ROOT_TOKEN_ID=ZyrP7NtNw0hbLUqu7N3IlTdO
+    ports:
+      - "8200:8200"
+    command: server -dev
+  redis-airflow:
+    image: "redis:latest"
+    container_name: "redis-airflow"
+    ports:
+      - "6379:6379"
+  redis:
+    image: "redis:latest"
+    container_name: "redis"
+    command: --port 6060
+    ports:
+      - "6060:6060"
