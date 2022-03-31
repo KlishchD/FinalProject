@@ -24,5 +24,5 @@ with DAG(dag_id='dag_for_static_generators', start_date=pendulum.parse("2020/10/
 
     generate_data_task = BashOperator(
         task_id="generate",
-        bash_command=f"python3 /usr/local/airflow/dags/static.py {parameters}"
+        bash_command=f"python3 /usr/local/airflow/dags/utils/static_generator.py {parameters}"
     )

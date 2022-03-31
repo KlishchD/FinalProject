@@ -6,26 +6,8 @@ import random
 import pandas
 from dateutil import parser
 
-from generators import FileConnector
-from generators.GCPConnector import GCPConnector
-
-cli_arguments_config = [
-    ["--views_number", 10_000, "Views to generate", "views_number", int],
-    ["--purchases_number", 100, "Purchases to generate", "purchases_number", int],
-    ["--min_seconds_delta", 0, "Minimal delta between seconds", "min_seconds_delta", int],
-    ["--max_seconds_delta", 60, "Maximal delta between seconds", "max_seconds_delta", int],
-    ["--min_minutes_delta", 0, "Minimal delta between minutes", "min_minutes_delta", int],
-    ["--max_minutes_delta", 60, "Maximal delta between minutes", "max_minutes_delta", int],
-    ["--users_fraction", 0.3, "Users fraction that will be used in generation", "users_fraction", float],
-    ["--item_fraction", 0.3, "Items fraction that will be used generation", "item_fraction", float],
-    ["--min_order_id", 0, "Minimal order id", "min_order_id", int],
-    ["--max_order_id", 100_000, "Maximal order id", "max_order_id", int],
-    ["--sink", "bucket", "Data sink (possible bucket or csv)", "sink", str],
-    ["--bucket_name", "capstone-project-bucket", "Name of the bucket", "bucket_name", str],
-    ["--key_filepath", "key.json", "Key to GCP service account", "key_filepath", str],
-    ["--purchases_filepath", "purchases.csv", "Path, where to write purchases", "purchases_filepath", str],
-    ["--views_filepath", "views.csv", "Path, where to write views", "views_filepath", str]
-]
+from utils import FileConnector
+from utils.GCPConnector import GCPConnector
 
 
 def load(filepath: str, names: list) -> pandas.DataFrame:
@@ -166,6 +148,32 @@ def generate_views(users: pandas.DataFrame,
     return views
 
 
+def randomize_list(ls: list) -> list:
+    """
+    Builds new list by randomly selecting random number of elements from list
+    :param ls: list to select from
+    :return: list with random elements from ls and random size
+    """
+    new_size = random.randint(1, len(ls))
+    return random.sample(ls, new_size)
+
+
+def add_amounts(items: list, min_item_amount, max_item_amount) -> list:
+    """
+    Adds purchased amounts to items
+    :param items: list of items ids
+    :param min_item_amount: minimal possible item amount
+    :param max_item_amount: maximal possible item amount
+    :return: list of tuples (item id, amount)
+    """
+    result = []
+    for item in items:
+        amount = random.randint(min_item_amount, max_item_amount)
+        result.append((item, amount))
+
+    return result
+
+
 def generate_purchases(views: pandas.DataFrame,
                        purchases_number: int,
                        min_seconds_delta: int,
@@ -173,7 +181,9 @@ def generate_purchases(views: pandas.DataFrame,
                        min_minutes_delta: int,
                        max_minutes_delta: int,
                        min_order_id: int,
-                       max_order_id: int) -> pandas.DataFrame:
+                       max_order_id: int,
+                       min_item_amount: int,
+                       max_item_amount: int) -> pandas.DataFrame:
     """
     Generates purchases based on generated views
     :param views: pandas DataFrame that contains all views
@@ -184,15 +194,23 @@ def generate_purchases(views: pandas.DataFrame,
     :param max_minutes_delta: biggest possible amount of minutest
     :param min_order_id: minimal possible order id
     :param max_order_id: maximal possible order id
+    :param min_item_amount: minimal possible amount of item in purchase
+    :param max_item_amount: maximal possible amount of item in purchase
     :return: pandas DataFrame that contains generated purchases
     """
 
     logging.info("Started generating purchases")
 
-    purchases = views.sample(purchases_number)
+    grouped = views.groupby(["user_id", "ip"]).agg({"ts": max, "item_id": list})
+
+    purchases = grouped.sample(purchases_number)
+    purchases["item_id"] = purchases["item_id"].apply(randomize_list)
+    purchases["item_id"] = purchases["item_id"].apply(add_amounts, args=(min_item_amount, max_item_amount))
+
     purchases["ts"] = add_random_delta(purchases["ts"].values,
                                        min_seconds_delta, max_seconds_delta,
                                        min_minutes_delta, max_minutes_delta)
+
     purchases["order_id"] = generate_orders_ids(purchases_number, min_order_id, max_order_id)
 
     logging.info("Finished generating purchases")
@@ -206,8 +224,37 @@ def parse_args() -> argparse.Namespace:
     :return: parsed arguments
     """
     args_parser = argparse.ArgumentParser(description='Dynamic generator')
-    for argument in cli_arguments_config:
-        args_parser.add_argument(argument[0], default=argument[1], help=argument[2], dest=argument[3], type=argument[4])
+    args_parser.add_argument('--views_number', default=10000, help='Views to generate', dest='views_number', type=int)
+    args_parser.add_argument('--purchases_number', default=100, help='Purchases to generate', dest='purchases_number',
+                             type=int)
+    args_parser.add_argument('--min_seconds_delta', default=0, help='Minimal delta between seconds',
+                             dest='min_seconds_delta', type=int)
+    args_parser.add_argument('--max_seconds_delta', default=60, help='Maximal delta between seconds',
+                             dest='max_seconds_delta', type=int)
+    args_parser.add_argument('--min_minutes_delta', default=0, help='Minimal delta between minutes',
+                             dest='min_minutes_delta', type=int)
+    args_parser.add_argument('--max_minutes_delta', default=60, help='Maximal delta between minutes',
+                             dest='max_minutes_delta', type=int)
+    args_parser.add_argument('--users_fraction', default=0.3, help='Users fraction that will be used in generation',
+                             dest='users_fraction', type=float)
+    args_parser.add_argument('--item_fraction', default=0.3, help='Items fraction that will be used generation',
+                             dest='item_fraction', type=float)
+    args_parser.add_argument('--min_order_id', default=0, help='Minimal order id', dest='min_order_id', type=int)
+    args_parser.add_argument('--max_order_id', default=100000, help='Maximal order id', dest='max_order_id', type=int)
+    args_parser.add_argument('--sink', default='bucket', help='Data sink (possible bucket or csv)', dest='sink',
+                             type=str)
+    args_parser.add_argument('--bucket_name', default='capstone-project-bucket', help='Name of the bucket',
+                             dest='bucket_name', type=str)
+    args_parser.add_argument('--key_filepath', default='key.json', help='Key to GCP service account',
+                             dest='key_filepath', type=str)
+    args_parser.add_argument('--purchases_filepath', default='purchases.csv', help='Path, where to write purchases',
+                             dest='purchases_filepath', type=str)
+    args_parser.add_argument('--views_filepath', default='views.csv', help='Path, where to write views',
+                             dest='views_filepath', type=str)
+    args_parser.add_argument('--min_item_amount', default=1, help='Minimal possible amount of item in one purchase',
+                             dest='min_item_amount', type=int)
+    args_parser.add_argument('--max_item_amount', default=1000, help='Maximal possible amount of item in one purchase',
+                             dest='max_item_amount', type=int)
 
     return args_parser.parse_args()
 
@@ -215,13 +262,12 @@ def parse_args() -> argparse.Namespace:
 def set_up_logging() -> None:
     """
     Sets up loging output format
-    :return: nothing
     """
     logging.basicConfig(format='%(asctime)s - %(levelname)s [%(name)s] [%(funcName)s():%(lineno)s] - %(message)s',
                         level=logging.INFO)
 
 
-def load_data() -> tuple:
+def load_resources() -> tuple:
     """
     Loads data
     :return: loaded data
@@ -259,7 +305,8 @@ def generate_data(args: argparse.Namespace,
                                    args.purchases_number,
                                    args.min_seconds_delta, args.max_seconds_delta,
                                    args.min_minutes_delta, args.max_minutes_delta,
-                                   args.min_order_id, args.max_order_id)
+                                   args.min_order_id, args.max_order_id,
+                                   args.min_item_amount, args.max_item_amount)
 
     logging.info("Finished generating data")
 
@@ -293,7 +340,11 @@ def __main__():
 
     args = parse_args()
 
-    write_data(args, *generate_data(args, *load_data()))
+    resources = load_resources()
+
+    data = generate_data(args, *resources)
+
+    write_data(args, *data)
 
 
 if __name__ == "__main__":

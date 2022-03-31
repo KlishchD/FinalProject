@@ -2,35 +2,12 @@ import argparse
 import logging
 from random import randint, uniform
 
-import FileConnector
-import RedisConnector
+from utils import RedisConnector, FileConnector
 
 USED_ITEM_ID = {-1}
 
 USED_USER_ID = {-1}
 USED_IP_ADDRESSES = {"0.0.0.0"}
-
-cli_arguments_config = [
-    ["--items_number", 10_000, "Items to generate", "items_number", int],
-    ["--min_item_id", 0, "Minimal item id", "min_item_id", int],
-    ["--max_item_id", 100_000_000, "Maximal item id", "max_item_id", int],
-    ["--min_item_price", 0.5, "Minimal item price", "min_item_price", float],
-    ["--max_item_price", 100_000, "Maximal item price", "max_item_price", float],
-    ["--users_number", 10_000, "Users to generate", "users_number", int],
-    ["--min_user_id", 1, "Minimal user id", "min_user_id", int],
-    ["--max_user_id", 10_000_000, "Maximal user id", "max_user_id", int],
-    ["--min_devices_number", 1, "Minimal devices number", "min_devices_number", int],
-    ["--max_devices_number", 5, "Maximal devices number", "max_devices_number", int],
-    ["--sink", "redis", "Data sink (possible redis or csv)", "sink", str],
-    ["--redis_port", "6060", "Port on which redis runs", "redis_port", int],
-    ["--redis_host", "redis", "Host on which redis runs", "redis_host", str],
-    ["--users_filepath", "users.csv", "Path were to write users", "users_filepath", str],
-    ["--items_filepath", "items.csv", "Path were to write items", "items_filepath", str],
-    ["--ips_filepath", "ips.csv", "Path were to write ips", "ips_filepath", str],
-    ["--countries_filepath", "resources/countries.txt", "Path to a file with possible countries", "countries_filepath",
-     str],
-    ["--devices_filepath", "resources/devices.txt", "Path to a file with possible devices", "devices_filepath", str]
-]
 
 
 def load_countries(filepath: str) -> None:
@@ -63,6 +40,11 @@ def load_devices(filepath: str) -> None:
 
 def load(devices_filepath: str,
          countries_filepath: str) -> None:
+    """
+    Loads resources
+    :param devices_filepath: path where file with possible devices reside
+    :param countries_filepath: path where file with possible countries reside
+    """
     logging.info("Started loading data")
     load_devices(devices_filepath)
     load_countries(countries_filepath)
@@ -246,18 +228,52 @@ def parse_arguments() -> argparse.Namespace:
     """
     args_parser = argparse.ArgumentParser(description="Static generator")
 
-    for argument in cli_arguments_config:
-        args_parser.add_argument(argument[0], default=argument[1], help=argument[2], dest=argument[3], type=argument[4])
+    args_parser.add_argument('--items_number', default=10000, help='Items to generate', dest='items_number', type=str)
+    args_parser.add_argument('--min_item_id', default=0, help='Minimal item id', dest='min_item_id', type=str)
+    args_parser.add_argument('--max_item_id', default=100000000, help='Maximal item id', dest='max_item_id', type=str)
+    args_parser.add_argument('--min_item_price', default=0.5, help='Minimal item price', dest='min_item_price',
+                             type=float)
+    args_parser.add_argument('--max_item_price', default=100000, help='Maximal item price', dest='max_item_price',
+                             type=float)
+    args_parser.add_argument('--users_number', default=10000, help='Users to generate', dest='users_number', type=str)
+    args_parser.add_argument('--min_user_id', default=1, help='Minimal user id', dest='min_user_id', type=str)
+    args_parser.add_argument('--max_user_id', default=10000000, help='Maximal user id', dest='max_user_id', type=str)
+    args_parser.add_argument('--min_devices_number', default=1, help='Minimal devices number',
+                             dest='min_devices_number', type=str)
+    args_parser.add_argument('--max_devices_number', default=5, help='Maximal devices number',
+                             dest='max_devices_number', type=str)
+    args_parser.add_argument('--sink', default='redis', help='Data sink (possible redis or csv)', dest='sink', type=str)
+    args_parser.add_argument('--redis_port', default=6060, help='Port on which redis runs', dest='redis_port', type=str)
+    args_parser.add_argument('--redis_host', default='redis', help='Host on which redis runs', dest='redis_host',
+                             type=str)
+    args_parser.add_argument('--users_filepath', default='users.csv', help='Path were to write users',
+                             dest='users_filepath', type=str)
+    args_parser.add_argument('--items_filepath', default='items.csv', help='Path were to write items',
+                             dest='items_filepath', type=str)
+    args_parser.add_argument('--ips_filepath', default='ips.csv', help='Path were to write ips', dest='ips_filepath',
+                             type=str)
+    args_parser.add_argument('--countries_filepath', default='resources/countries.txt',
+                             help='Path to a file with possible countries', dest='countries_filepath', type=str)
+    args_parser.add_argument('--devices_filepath', default='resources/devices.txt',
+                             help='Path to a file with possible devices', dest='devices_filepath', type=str)
 
     return args_parser.parse_args()
 
 
 def set_up_logging() -> None:
+    """
+    Sets up logging
+    """
     logging.basicConfig(format='%(asctime)s - %(levelname)s [%(name)s] [%(funcName)s():%(lineno)s] - %(message)s',
                         level=logging.INFO)
 
 
 def generate_data(args: argparse.Namespace) -> tuple:
+    """
+    Generates data
+    :param args: cli arguments
+    :return: tuple with generated data
+    """
     users = generate_users(args.users_number,
                            args.min_user_id,
                            args.max_user_id,
@@ -278,6 +294,13 @@ def write_data(args: argparse.Namespace,
                users: list,
                ips: list,
                items: list) -> None:
+    """
+    Writes data to a selected sink
+    :param args: cli arguments
+    :param users: list of users to write
+    :param ips: list of ips to write
+    :param items: list of items to write
+    """
     logging.info("Started writing data")
 
     if args.sink.lower() == "redis":
@@ -297,7 +320,8 @@ def __main__():
     set_up_logging()
     args = parse_arguments()
     load(args.devices_filepath, args.countries_filepath)
-    write_data(args, *generate_data(args))
+    data = generate_data(args)
+    write_data(args, *data)
 
 
 if __name__ == "__main__":

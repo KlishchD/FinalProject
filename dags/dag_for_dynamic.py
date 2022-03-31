@@ -24,5 +24,5 @@ with DAG(dag_id="dag_for_dynamic_generators", start_date=pendulum.parse("2020/10
 
     generate = BashOperator(
         task_id="generate",
-        bash_command=f"python3 dynamic_generator.py {parameters}"
+        bash_command=f"python3 utils/dynamic_generator.py {parameters}"
     )
