@@ -63,9 +63,9 @@ def write_items(filepath: str,
     logging.info('Finished writing items')
 
 
-def write_DataFrame(filepath, data, index=False, header=True) -> None:
+def write_DataFrame_to_csv(filepath, data, index=False, header=True) -> None:
     """
-    Writes data from pandas DataaFrame to file
+    Writes data from pandas DataFrame to csv file
     :param index: flag says whether to write indexes or not
     :param header: flag says whether to write header or not
     :param filepath: path where to write a file
@@ -73,4 +73,16 @@ def write_DataFrame(filepath, data, index=False, header=True) -> None:
     """
     logging.info(f"Started writing {filepath}")
     data.to_csv(filepath, index=index, header=header)
+    logging.info(f"Finished writing {filepath}")
+
+
+def write_DataFrame_to_json(filepath, data, index=False) -> None:
+    """
+    Writes data from pandas DataFrame to json file
+    :param index: flag says whether to write indexes or not
+    :param filepath: path where to write a file
+    :param data: pandas DataFrame to write
+    """
+    logging.info(f"Started writing {filepath}")
+    data.to_json(filepath, index=index, orient="records")
     logging.info(f"Finished writing {filepath}")

@@ -20,13 +20,13 @@ class GCPConnector:
         """
         self.__set_up__(purchases, views)
         self.__write__(bucket_name, "views.csv")
-        self.__write__(bucket_name, "purchases.csv")
+        self.__write__(bucket_name, "purchases.json")
         self.__clean_up__()
 
     def __set_up__(self, purchases, views):
         logging.info("Started creating temporary files")
-        FileConnector.write_DataFrame("views.csv", views)
-        FileConnector.write_DataFrame("purchases.csv", purchases, index=True)
+        FileConnector.write_DataFrame_to_csv("views.csv", views)
+        FileConnector.write_DataFrame_to_json("purchases.json", purchases, index=True)
         logging.info("Finished creating temporary files")
 
     def __write__(self, bucket_name, filepath):
@@ -40,7 +40,7 @@ class GCPConnector:
     def __clean_up__(self):
         logging.info("Started cleaning up temporary files")
         os.remove("views.csv")
-        os.remove("purchases.csv")
+        os.remove("purchases.json")
         logging.info("Finished cleaning up temporary files")
 
     def __generate_credentials__(self, key_filepath):

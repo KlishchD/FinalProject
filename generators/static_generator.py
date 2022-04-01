@@ -242,7 +242,7 @@ def parse_arguments() -> argparse.Namespace:
                              dest='min_devices_number', type=str)
     args_parser.add_argument('--max_devices_number', default=5, help='Maximal devices number',
                              dest='max_devices_number', type=str)
-    args_parser.add_argument('--sink', default='redis', help='Data sink (possible redis or csv)', dest='sink', type=str)
+    args_parser.add_argument('--sink', default='redis', help='Data sink (possible redis or files)', dest='sink', type=str)
     args_parser.add_argument('--redis_port', default=6060, help='Port on which redis runs', dest='redis_port', type=str)
     args_parser.add_argument('--redis_host', default='redis', help='Host on which redis runs', dest='redis_host',
                              type=str)
@@ -306,12 +306,12 @@ def write_data(args: argparse.Namespace,
     if args.sink.lower() == "redis":
         redis_connector = RedisConnector.RedisConnector(args.redis_host, args.redis_port)
         redis_connector.write(users, ips, items)
-    elif args.sink.lower() == "csv":
+    elif args.sink.lower() == "file":
         FileConnector.write_users(args.users_filepath, users)
         FileConnector.write_ips(args.ips_filepath, ips)
         FileConnector.write_items(args.items_filepath, items)
     else:
-        raise ValueError("Sink must be csv or redis")
+        raise ValueError("Sink must be file or redis")
 
     logging.info("Finished writing data")
 

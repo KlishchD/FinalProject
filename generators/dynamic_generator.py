@@ -204,14 +204,17 @@ def generate_purchases(views: pandas.DataFrame,
     grouped = views.groupby(["user_id", "ip"]).agg({"ts": max, "item_id": list})
 
     purchases = grouped.sample(purchases_number)
-    purchases["item_id"] = purchases["item_id"].apply(randomize_list)
-    purchases["item_id"] = purchases["item_id"].apply(add_amounts, args=(min_item_amount, max_item_amount))
+    purchases["items"] = purchases["item_id"].apply(randomize_list)
+    purchases["items"] = purchases["items"].apply(add_amounts, args=(min_item_amount, max_item_amount))
 
     purchases["ts"] = add_random_delta(purchases["ts"].values,
                                        min_seconds_delta, max_seconds_delta,
                                        min_minutes_delta, max_minutes_delta)
 
     purchases["order_id"] = generate_orders_ids(purchases_number, min_order_id, max_order_id)
+
+    purchases = purchases.reset_index()
+    purchases.drop("item_id", axis=1, inplace=True)
 
     logging.info("Finished generating purchases")
 
@@ -241,13 +244,13 @@ def parse_args() -> argparse.Namespace:
                              dest='item_fraction', type=float)
     args_parser.add_argument('--min_order_id', default=0, help='Minimal order id', dest='min_order_id', type=int)
     args_parser.add_argument('--max_order_id', default=100000, help='Maximal order id', dest='max_order_id', type=int)
-    args_parser.add_argument('--sink', default='bucket', help='Data sink (possible bucket or csv)', dest='sink',
+    args_parser.add_argument('--sink', default='bucket', help='Data sink (possible bucket or file)', dest='sink',
                              type=str)
     args_parser.add_argument('--bucket_name', default='capstone-project-bucket', help='Name of the bucket',
                              dest='bucket_name', type=str)
     args_parser.add_argument('--key_filepath', default='key.json', help='Key to GCP service account',
                              dest='key_filepath', type=str)
-    args_parser.add_argument('--purchases_filepath', default='purchases.csv', help='Path, where to write purchases',
+    args_parser.add_argument('--purchases_filepath', default='purchases.json', help='Path, where to write purchases',
                              dest='purchases_filepath', type=str)
     args_parser.add_argument('--views_filepath', default='views.csv', help='Path, where to write views',
                              dest='views_filepath', type=str)
@@ -325,11 +328,11 @@ def write_data(args: argparse.Namespace,
 
     if args.sink.lower() == "bucket":
         GCPConnector(args.key_filepath).write_to_bucket(args.bucket_name, purchases, views)
-    elif args.sink.lower() == "csv":
-        FileConnector.write_DataFrame(args.views_filepath, views)
-        FileConnector.write_DataFrame(args.purchases_filepath, purchases, index=True)
+    elif args.sink.lower() == "file":
+        FileConnector.write_DataFrame_to_csv(args.views_filepath, views)
+        FileConnector.write_DataFrame_to_json(args.purchases_filepath, purchases, index=True)
     else:
-        raise ValueError("Sink must be bucket or csv")
+        raise ValueError("Sink must be bucket or file")
 
     logging.info("Finished writing data")
 
