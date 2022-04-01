@@ -51,14 +51,15 @@ def write_items(filepath: str,
     logging.info('Finished writing items')
 
 
-def write_DataFrame(filepath, data, header=True) -> None:
+def write_DataFrame(filepath, data, index=False, header=True) -> None:
     """
     Writes data from pandas DataaFrame to file
+    :param index: flag says whether to write indexes or not
     :param header: flag says whether to write header or not
     :param filepath: path where to write a file
     :param data: pandas DataFrame to write
     :return: nothing
     """
     logging.info(f"Started writing {filepath}")
-    data.to_csv(filepath, index=False, header=header)
+    data.to_csv(filepath, index=index, header=header)
     logging.info(f"Finished writing {filepath}")

@@ -4,6 +4,8 @@ import os
 from google.cloud import storage
 from google.oauth2 import service_account
 
+from . import FileConnector
+
 
 class GCPConnector:
     def __init__(self, key_filepath, ):
@@ -23,8 +25,8 @@ class GCPConnector:
 
     def __set_up__(self, purchases, views):
         logging.info("Started creating temporary files")
-        self.__write_to_file__("views.csv", views)
-        self.__write_to_file__("purchases.csv", purchases)
+        FileConnector.write_DataFrame("views.csv", views)
+        FileConnector.write_DataFrame("purchases.csv", purchases, index=True)
         logging.info("Finished creating temporary files")
 
     def __write__(self, bucket_name, filepath):
@@ -43,13 +45,3 @@ class GCPConnector:
 
     def __generate_credentials__(self, key_filepath):
         return service_account.Credentials.from_service_account_file(key_filepath)
-
-    def __write_to_file__(self, filepath, data, header=True):
-        """
-        Writes data from pandas DataaFrame to file
-        :param header: flag says whether to write header or not
-        :param filepath: path where to write a file
-        :param data: pandas DataFrame to write
-        :return: nothing
-        """
-        data.to_csv(filepath, index=False, header=header)

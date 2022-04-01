@@ -307,7 +307,6 @@ def generate_data(args: argparse.Namespace,
                                    args.min_minutes_delta, args.max_minutes_delta,
                                    args.min_order_id, args.max_order_id,
                                    args.min_item_amount, args.max_item_amount)
-
     logging.info("Finished generating data")
 
     return views, purchases
@@ -328,7 +327,7 @@ def write_data(args: argparse.Namespace,
         GCPConnector(args.key_filepath).write_to_bucket(args.bucket_name, purchases, views)
     elif args.sink.lower() == "csv":
         FileConnector.write_DataFrame(args.views_filepath, views)
-        FileConnector.write_DataFrame(args.purchases_filepath, purchases)
+        FileConnector.write_DataFrame(args.purchases_filepath, purchases, index=True)
     else:
         raise ValueError("Sink must be bucket or csv")
 
