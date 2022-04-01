@@ -2,15 +2,19 @@ import logging
 
 
 def write_users(filepath: str,
-                users: list) -> None:
+                users: list,
+                header: bool = True) -> None:
     """
     Writes list of users to file with filepath path
     :param filepath: path where to write users
     :param users: list of users
+    :param header: flag says whether to write header or not
     """
     logging.info('Started writing users')
 
     with open(filepath, "w") as file:
+        if header:
+            file.write("user_id,device_name,ip\n")
         for user in users:
             for device in user[1]:
                 file.write(",".join([user[0], device[0], device[1]]) + "\n")
@@ -19,15 +23,19 @@ def write_users(filepath: str,
 
 
 def write_ips(filepath: str,
-              ips: list) -> None:
+              ips: list,
+              header: bool = True) -> None:
     """
     Writes a list of ips to a file with filepath path
     :param filepath: path where to write ips
     :param ips: list of ips
+    :param header: flag says whether to write header or not
     """
     logging.info('Started writing ips')
 
     with open(filepath, "w") as file:
+        if header:
+            file.write("ip,country\n")
         for ip in ips:
             file.write(",".join(ip) + "\n")
 
@@ -35,16 +43,20 @@ def write_ips(filepath: str,
 
 
 def write_items(filepath: str,
-                items: list) -> None:
+                items: list,
+                header: bool = True) -> None:
     """
     Writes items to a file with filepath path
     :param filepath: path where to write items
     :param items: list of items
+    :param header: flag says whether to write header or not
     """
 
     logging.info('Started writing items')
 
     with open(filepath, "w") as file:
+        if header:
+            file.write("item_id,price\n")
         for item in items:
             file.write(",".join(item) + "\n")
 
@@ -58,7 +70,6 @@ def write_DataFrame(filepath, data, index=False, header=True) -> None:
     :param header: flag says whether to write header or not
     :param filepath: path where to write a file
     :param data: pandas DataFrame to write
-    :return: nothing
     """
     logging.info(f"Started writing {filepath}")
     data.to_csv(filepath, index=index, header=header)

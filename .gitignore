@@ -127,3 +127,15 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+Docker/airflow_data
+Docker/airflow/logs
+Docker/airflow/airflow.cfg
+Docker/airflow/airflow.db
+Docker/airflow/airflow.db-journal
+Docker/airflow/webserver_config.py
+Docker/airflow/dags/key.json
+generators/key.json
+Docker/airflow_data/
+Docker/airflow
+generators/*.csv

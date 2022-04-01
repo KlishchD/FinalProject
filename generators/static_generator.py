@@ -218,7 +218,7 @@ def generate_item_price(min_item_price: float,
     :param max_item_price: biggest possible item price
     :return: price
     """
-    return str(uniform(min_item_price, max_item_price))
+    return str(round(uniform(min_item_price, max_item_price), 2))
 
 
 def parse_arguments() -> argparse.Namespace:
