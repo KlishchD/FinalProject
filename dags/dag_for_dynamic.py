@@ -20,9 +20,11 @@ def load_configs_for_generator(filepath):
 
 
 with DAG(dag_id="dag_for_dynamic_generators", start_date=pendulum.parse("2020/10/10"), schedule_interval=None) as dag:
-    parameters = load_configs_for_generator("/usr/local/airflow/dags/dynamic_config.json")
+    parameters_dynamic = load_configs_for_generator("/usr/local/airflow/dags/dynamic_config.json")
+    parameters_static = load_configs_for_generator("/usr/local/airflow/dags/static_config.json")
 
     generate = BashOperator(
         task_id="generate",
-        bash_command=f"python3 utils/dynamic_generator.py {parameters}"
+        bash_command=f"cd /usr/local/airflow/dags/utils && python3 static_generator.py --sink csv {parameters_static} && "
+                     f"python3 dynamic_generator.py {parameters_dynamic}"
     )

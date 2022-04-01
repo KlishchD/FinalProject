@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  postgres:
+  postgres-airflow:
     image: "postgres:latest"
     container_name: "postgres-airflow"
     environment:
@@ -12,7 +12,7 @@ services:
       - "5432:5432"
     volumes:
       - ./airflow_data/postgres:/var/lib/postgresql/data
-  db:
+  postgres:
     image: "postgres:latest"
     container_name: "postgres"
     restart: always
@@ -42,13 +42,13 @@ services:
     volumes:
       - ./airflow:/usr/local/airflow
     depends_on:
-      - postgres
+      - postgres-airflow
   scheduler:
     build: .
     container_name: "scheduler"
     restart: always
     depends_on:
-      - postgres
+      - postgres-airflow
     volumes:
       - ./airflow:/usr/local/airflow
     entrypoint: airflow scheduler
@@ -57,7 +57,7 @@ services:
     container_name: "worker1"
     restart: always
     depends_on:
-      - postgres
+      - postgres-airflow
     volumes:
       - ./airflow:/usr/local/airflow
     entrypoint: airflow celery worker -q db_update_queue --pid /usr/local/airflow/w1.pid
@@ -71,7 +71,7 @@ services:
     container_name: "worker2"
     restart: always
     depends_on:
-      - postgres
+      - postgres-airflow
     volumes:
       - ./airflow/:/usr/local/airflow
     entrypoint: airflow celery worker -q db_update_queue --pid /usr/local/airflow/w2.pid
@@ -85,7 +85,7 @@ services:
     container_name: "worker3"
     restart: always
     depends_on:
-      - postgres
+      - postgres-airflow
     volumes:
       - ./airflow:/usr/local/airflow
     entrypoint: airflow celery worker --pid /usr/local/airflow/w3.pid
@@ -99,7 +99,7 @@ services:
     container_name: "flower"
     restart: always
     depends_on:
-      - postgres
+      - postgres-airflow
     volumes:
       - ./airflow:/usr/local/airflow
     entrypoint: airflow celery flower
