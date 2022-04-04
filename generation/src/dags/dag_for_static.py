@@ -1,10 +1,10 @@
 import pendulum
 from airflow import DAG
 from airflow.operators.bash import BashOperator
-from utils.ParametersLoader import load_configs_for_generator
+from utils.ParametersLoader import load_configs_from_json
 
 with DAG(dag_id='dag_for_static_generators', start_date=pendulum.parse("2020/10/10"), schedule_interval=None) as dag:
-    parameters = load_configs_for_generator("/usr/local/airflow/dags/static_config.json")
+    parameters = load_configs_from_json("/usr/local/airflow/dags/dag_for_static_config.json")
 
     generate_data_task = BashOperator(
         task_id="generate",

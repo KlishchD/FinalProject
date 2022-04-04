@@ -1,7 +1,7 @@
 import json
 
 
-def load_configs_for_generator(filepath):
+def load_configs_from_json(filepath):
     try:
         parsed = json.load(open(filepath))
     except FileNotFoundError:

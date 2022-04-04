@@ -1,0 +1,6 @@
+{
+  "items_filepath": "/usr/local/airflow/dags/tmp/items.csv",
+  "users_filepath": "/usr/local/airflow/dags/tmp/users.csv",
+  "views_filepath": "/usr/local/airflow/dags/tmp/views.csv",
+  "purchases_filepath": "/usr/local/airflow/dags/tmp/purchases.json"
+}
