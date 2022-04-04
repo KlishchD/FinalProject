@@ -242,15 +242,15 @@ def parse_arguments() -> argparse.Namespace:
                              dest='min_devices_number', type=str)
     args_parser.add_argument('--max_devices_number', default=5, help='Maximal devices number',
                              dest='max_devices_number', type=str)
-    args_parser.add_argument('--sink', default='redis', help='Data sink (possible redis or files)', dest='sink', type=str)
+    args_parser.add_argument('--sink', default='both', help='Data sink (possible redis, files or both)', dest='sink', type=str)
     args_parser.add_argument('--redis_port', default=6060, help='Port on which redis runs', dest='redis_port', type=str)
     args_parser.add_argument('--redis_host', default='redis', help='Host on which redis runs', dest='redis_host',
                              type=str)
-    args_parser.add_argument('--users_filepath', default='users.csv', help='Path were to write users',
+    args_parser.add_argument('--users_filepath', default='users.csv', help='Path where to write users',
                              dest='users_filepath', type=str)
-    args_parser.add_argument('--items_filepath', default='items.csv', help='Path were to write items',
+    args_parser.add_argument('--items_filepath', default='items.csv', help='Path where to write items',
                              dest='items_filepath', type=str)
-    args_parser.add_argument('--ips_filepath', default='ips.csv', help='Path were to write ips', dest='ips_filepath',
+    args_parser.add_argument('--ips_filepath', default='ips.csv', help='Path where to write ips', dest='ips_filepath',
                              type=str)
     args_parser.add_argument('--countries_filepath', default='resources/countries.txt',
                              help='Path to a file with possible countries', dest='countries_filepath', type=str)
@@ -310,8 +310,14 @@ def write_data(args: argparse.Namespace,
         FileConnector.write_users(args.users_filepath, users)
         FileConnector.write_ips(args.ips_filepath, ips)
         FileConnector.write_items(args.items_filepath, items)
+    elif args.sink.lower() == "both":
+        FileConnector.write_users(args.users_filepath, users)
+        FileConnector.write_ips(args.ips_filepath, ips)
+        FileConnector.write_items(args.items_filepath, items)
+        redis_connector = RedisConnector.RedisConnector(args.redis_host, args.redis_port)
+        redis_connector.write(users, ips, items)
     else:
-        raise ValueError("Sink must be file or redis")
+        raise ValueError("Sink must be redis, file or both")
 
     logging.info("Finished writing data")
 

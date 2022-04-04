@@ -10,7 +10,7 @@ def write_users(filepath: str,
     :param users: list of users
     :param header: flag says whether to write header or not
     """
-    logging.info('Started writing users')
+    logging.info('Started writing users to a file')
 
     with open(filepath, "w") as file:
         if header:
@@ -19,7 +19,7 @@ def write_users(filepath: str,
             for device in user[1]:
                 file.write(",".join([user[0], device[0], device[1]]) + "\n")
 
-    logging.info('Finished writing users')
+    logging.info('Finished writing users to a file')
 
 
 def write_ips(filepath: str,
@@ -31,7 +31,7 @@ def write_ips(filepath: str,
     :param ips: list of ips
     :param header: flag says whether to write header or not
     """
-    logging.info('Started writing ips')
+    logging.info('Started writing ips to a file')
 
     with open(filepath, "w") as file:
         if header:
@@ -39,7 +39,7 @@ def write_ips(filepath: str,
         for ip in ips:
             file.write(",".join(ip) + "\n")
 
-    logging.info('Finished writing ips')
+    logging.info('Finished writing ips to a file')
 
 
 def write_items(filepath: str,
@@ -52,7 +52,7 @@ def write_items(filepath: str,
     :param header: flag says whether to write header or not
     """
 
-    logging.info('Started writing items')
+    logging.info('Started writing items to a file')
 
     with open(filepath, "w") as file:
         if header:
@@ -60,10 +60,10 @@ def write_items(filepath: str,
         for item in items:
             file.write(",".join(item) + "\n")
 
-    logging.info('Finished writing items')
+    logging.info('Finished writing items to a file')
 
 
-def write_DataFrame_to_csv(filepath, data, index=False, header=True) -> None:
+def write_data_frame_to_csv(filepath, data, index=False, header=True) -> None:
     """
     Writes data from pandas DataFrame to csv file
     :param index: flag says whether to write indexes or not
@@ -76,7 +76,7 @@ def write_DataFrame_to_csv(filepath, data, index=False, header=True) -> None:
     logging.info(f"Finished writing {filepath}")
 
 
-def write_DataFrame_to_json(filepath, data, index=False) -> None:
+def write_data_frame_to_json(filepath, data, index=False) -> None:
     """
     Writes data from pandas DataFrame to json file
     :param index: flag says whether to write indexes or not

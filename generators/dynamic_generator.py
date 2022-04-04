@@ -244,7 +244,7 @@ def parse_args() -> argparse.Namespace:
                              dest='item_fraction', type=float)
     args_parser.add_argument('--min_order_id', default=0, help='Minimal order id', dest='min_order_id', type=int)
     args_parser.add_argument('--max_order_id', default=100000, help='Maximal order id', dest='max_order_id', type=int)
-    args_parser.add_argument('--sink', default='bucket', help='Data sink (possible bucket or file)', dest='sink',
+    args_parser.add_argument('--sink', default='both', help='Data sink (possible bucket, file or both)', dest='sink',
                              type=str)
     args_parser.add_argument('--bucket_name', default='capstone-project-bucket', help='Name of the bucket',
                              dest='bucket_name', type=str)
@@ -259,6 +259,12 @@ def parse_args() -> argparse.Namespace:
     args_parser.add_argument('--max_item_amount', default=1000, help='Maximal possible amount of item in one purchase',
                              dest='max_item_amount', type=int)
 
+    args_parser.add_argument('--users_filepath', default='users.csv', help='Path where users were writen',
+                             dest='users_filepath', type=str)
+    args_parser.add_argument('--items_filepath', default='items.csv', help='Path where items were writen',
+                             dest='items_filepath', type=str)
+
+
     return args_parser.parse_args()
 
 
@@ -270,15 +276,15 @@ def set_up_logging() -> None:
                         level=logging.INFO)
 
 
-def load_resources() -> tuple:
+def load_resources(args) -> tuple:
     """
     Loads data
     :return: loaded data
     """
     logging.info("Started loading data")
 
-    users = load("users.csv", ["user_id", "device", "ip"])
-    items = load("items.csv", ["item_id", "item_amount", "item_price"])
+    users = load(args.users_filepath, ["user_id", "device", "ip"])
+    items = load(args.items_filepath, ["item_id", "item_amount", "item_price"])
 
     logging.info("Finished loading data")
 
@@ -329,8 +335,13 @@ def write_data(args: argparse.Namespace,
     if args.sink.lower() == "bucket":
         GCPConnector(args.key_filepath).write_to_bucket(args.bucket_name, purchases, views)
     elif args.sink.lower() == "file":
-        FileConnector.write_DataFrame_to_csv(args.views_filepath, views)
-        FileConnector.write_DataFrame_to_json(args.purchases_filepath, purchases, index=True)
+        FileConnector.write_data_frame_to_csv(args.views_filepath, views)
+        FileConnector.write_data_frame_to_json(args.purchases_filepath, purchases, index=True)
+    elif args.sink.lower() == "both":
+        FileConnector.write_data_frame_to_csv(args.views_filepath, views)
+        FileConnector.write_data_frame_to_json(args.purchases_filepath, purchases, index=True)
+        GCPConnector(args.key_filepath).write_to_bucket_files(args.bucket_name,
+                                                              args.purchases_filepath, args.views_filepath)
     else:
         raise ValueError("Sink must be bucket or file")
 
@@ -342,7 +353,7 @@ def __main__():
 
     args = parse_args()
 
-    resources = load_resources()
+    resources = load_resources(args)
 
     data = generate_data(args, *resources)
 

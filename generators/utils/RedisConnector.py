@@ -19,37 +19,37 @@ class RedisConnector:
         Writes items to redis
         :param items: list of item
         """
-        logging.info("Started writing items")
+        logging.info("Started writing items to the Redis")
 
         for item in items:
             self.redis_connection.sadd(item[0], item[1])
 
-        logging.info("Finished writing items")
+        logging.info("Finished writing items to the Redis")
 
     def write_ips(self, ips: list) -> None:
         """
         Writes ips to redis
         :param ips: list of ips
         """
-        logging.info("Started writing ips")
+        logging.info("Started writing ips to the Redis")
 
         for ip in ips:
             self.redis_connection.sadd(ip[0], ip[1])
 
-        logging.info("Finished writing ips")
+        logging.info("Finished writing ips to the Redis")
 
     def write_users(self, users: list) -> None:
         """
         Writes users to redis
         :param users: list of users
         """
-        logging.info("Started writing users")
+        logging.info("Started writing users to the Redis")
 
         for user in users:
             for device in user[1]:
                 self.redis_connection.sadd(user[0], ",".join([device[0], device[1]]))
 
-        logging.info("Finished writing users")
+        logging.info("Finished writing users to the Redis")
 
     def write(self,
               users: list,

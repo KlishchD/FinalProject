@@ -4,4 +4,6 @@
 cp -r ../generators ../Docker/airflow/dags
 mv ../Docker/airflow/dags/generators ../Docker/airflow/dags/utils
 
-cp ../dags/* ../Docker/airflow/dags
+cp -r ../dags/* ../Docker/airflow/dags
+
+mkdir ../Docker/airflow/dags/tmp
