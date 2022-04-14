@@ -1,7 +1,8 @@
 package JobManagment
 
-import Utils.CLIArgumentsParsing.parseArguments
+import Utils.ArgumentsParsing.parseArguments
 import de.halcony.argparse.Parser
+import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.SparkSession
 
 class JobRunner extends Runner {
@@ -17,6 +18,8 @@ class JobRunner extends Runner {
     val parser = jobTuple._2
 
     val arguments = parseArguments(args, parser)
+
+    Logger.getLogger("org").setLevel(Level.ERROR)
 
     val spark = SparkSession.builder().master(sparkMaster).appName(sparkAppName).getOrCreate()
 

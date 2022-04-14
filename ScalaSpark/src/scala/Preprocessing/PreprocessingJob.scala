@@ -1,7 +1,7 @@
 package Preprocessing
 
-import JobManagment.Job
-import Utils.CLIArgumentsParsing.EnrichedParser
+import JobManagment.{Job, JobCompanion}
+import Utils.ArgumentsParsing.RichParser
 import Utils.Loading.loadFromFile
 import Utils.Services.setUpServiceAccount
 import Utils.Writing.writeToParquet
@@ -13,7 +13,7 @@ abstract class PreprocessingJob(arguments: Map[String, String], spark: SparkSess
     if (arguments("mode") == "prod")
       setUpServiceAccount("readServiceAccountEmail", "readServiceAccountKeyFilepath", spark)
 
-    Map("data" -> loadFromFile(arguments("filepath"), arguments("format"), spark))
+    Map("data" -> loadFromFile(arguments("datafp"), arguments("dataf"), spark))
   }
 
   override def write(data: DataFrame): Unit = {
@@ -23,9 +23,9 @@ abstract class PreprocessingJob(arguments: Map[String, String], spark: SparkSess
   }
 }
 
-object PreprocessingJob {
+object PreprocessingJob extends JobCompanion {
   def parser(): Parser = {
-    Parser("Data preprocessor")
+    Job.parser()
       .addMode()
       .addDynamicTableDataSource("data")
       .addFormatForData("data")

@@ -1,5 +1,7 @@
 package Preprocessing
 
+
+import JobManagment.JobCompanion
 import Utils.Parsing.{convertStringToTimeStamp, repartitionByDate}
 import de.halcony.argparse.Parser
 import org.apache.spark.sql.{DataFrame, SparkSession}
@@ -12,6 +14,6 @@ class ViewPreprocessingJob(arguments: Map[String, String], spark: SparkSession) 
   }
 }
 
-object ViewPreprocessingJob {
+object ViewPreprocessingJob extends JobCompanion {
   def parser(): Parser = PreprocessingJob.parser()
 }

@@ -1,8 +1,10 @@
 package Utils
 
+import com.github.nscala_time.time.Imports.{richDateTime, richInt}
 import de.halcony.argparse.Parser
+import org.joda.time.DateTime
 
-object CLIArgumentsParsing {
+object ArgumentsParsing {
 
   def parseArguments(argument: Array[String], parser: Parser): Map[String, String] = {
     parser.parse(argument).toMap.map(retrieve)
@@ -13,7 +15,25 @@ object CLIArgumentsParsing {
     else (x._1, x._2.toString)
   }
 
-  implicit class EnrichedParser(parse: Parser) {
+  def parseTimeFrame(time: String): (DateTime, DateTime) = {
+    val now = DateTime.now()
+    time match {
+      case "day" =>
+        (now - 1.day, now)
+      case "week" =>
+        (now - 7.days, now)
+      case "month" =>
+        (now - 1.month, now)
+      case "year" =>
+        (now - 1.year, now)
+    }
+  }
+
+  def parseArray(str: String): Array[String] = {
+    str.split(",")
+  }
+
+  implicit class RichParser(parse: Parser) {
     def addMode(): Parser = {
       parse.addOptional("mode", "m", description = "Mode in which app will run (dev or prod)")
     }
@@ -23,13 +43,13 @@ object CLIArgumentsParsing {
     }
 
     def addStaticTableDataSource(name: String): Parser = {
-      parse.addOptional(f"${name}filepath", f"${name}fp", description = f"Filepath to a file with $name")
-      parse.addOptional(f"${name}keyPattern", f"${name}kp", description = f"Key pattern of $name")
-      parse.addOptional(f"${name}keyColumn", f"${name}kc", description = f"Key column of $name")
+      parse.addOptional(f"${name}Filepath", f"${name}fp", description = f"Filepath to a file with $name")
+      parse.addOptional(f"${name}KeyPattern", f"${name}kp", description = f"Key pattern of $name")
+      parse.addOptional(f"${name}KeyColumn", f"${name}kc", description = f"Key column of $name")
     }
 
     def addFormatForData(name: String): Parser = {
-      parse.addOptional(f"${name}Format", f"${name}f", description = f"Format of ${name}")
+      parse.addOptional(f"${name}Format", f"${name}f", description = f"Format of $name")
     }
 
     def addReadServiceAccount(): Parser = {
@@ -60,6 +80,28 @@ object CLIArgumentsParsing {
       parse.addOptional("devices", "d", description = "List of devices to include in aggregation (omit if want to get aggregation for all devices)")
     }
 
+    def addPostgres(): Parser = {
+      parse
+        .addOptional("postgresUrl", "ph", description = "Jdbc url of postgres")
+        .addOptional("postgresUser", "pu", description = "Postgres user")
+        .addOptional("postgresPassword", "pp", description = "Postgres user password")
+    }
+
+    def addRedis(): Parser = {
+      parse
+        .addOptional("redisHost", "rh", description = "Host of redis")
+        .addOptional("redisPort", "rp", description = "Port of redis")
+    }
+
+    def addBigQuery(): Parser = {
+      parse
+        .addOptional("bigQueryServiceAccountKeyFilepath", "bqsakfp", description = "Path to a file with service account credential to write in BigQuery")
+        .addOptional("temporaryBucketName", "tbn", description = "Name of temporary bucket for writing to big query")
+    }
+
+    def addResultTable(): Parser = {
+      parse.addOptional("resultTable", "rt", description = "Table to write results in")
+    }
   }
 
 }

@@ -1,5 +1,6 @@
 package Preprocessing
 
+import JobManagment.JobCompanion
 import Utils.Parsing.{convertUnixToTimeStamp, repartitionByDate}
 import de.halcony.argparse.Parser
 import org.apache.spark.sql.{DataFrame, SparkSession}
@@ -12,7 +13,6 @@ class PurchasesPreprocessingJob(arguments: Map[String, String], spark: SparkSess
   }
 }
 
-object PurchasesPreprocessingJob {
+object PurchasesPreprocessingJob extends JobCompanion {
   def parser(): Parser = PreprocessingJob.parser()
-
 }
