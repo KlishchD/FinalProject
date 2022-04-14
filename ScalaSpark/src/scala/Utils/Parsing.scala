@@ -54,4 +54,12 @@ object Parsing {
         data.select("*").where(column(columnName).isin(parsed: _*))
     }
   }
+
+  def explodeDataFrameColumn(columnName: String, data: DataFrame): DataFrame = {
+    data.withColumn(columnName, explode(column(columnName)))
+  }
+
+  def extractArrayElementToNewColumn(arrayColumnName: String, arrayIndex: Int, newColumnName: String, data: DataFrame): DataFrame = {
+    data.withColumn(newColumnName, column(arrayColumnName).getItem(arrayIndex))
+  }
 }

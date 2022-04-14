@@ -10,19 +10,19 @@ class GroupedItemsAggregationJob(arguments: Map[String, String], spark: SparkSes
   override def process(data: Map[String, DataFrame]): DataFrame = {
     val filteredPurchasesWithLocations = super.process(data)
 
-    val first = selectTimeStampAndItemIdFromPurchases(filteredPurchasesWithLocations, "item1")
+    val firstGroup = selectItemGroupFromPurchases(filteredPurchasesWithLocations, "item1")
 
-    val second = selectTimeStampAndItemIdFromPurchases(filteredPurchasesWithLocations, "item2")
+    val secondGroup = selectItemGroupFromPurchases(filteredPurchasesWithLocations, "item2")
 
-    val joined = first.join(second, "ts")
+    val joined = firstGroup.join(secondGroup, "ts", "user_id")
 
     val filteredOutGroupsWithSameItems = joined.filter(column("item1") > column("item2"))
 
     filteredOutGroupsWithSameItems.groupBy("item1", "item2").count()
   }
 
-  def selectTimeStampAndItemIdFromPurchases(purchases: DataFrame, newItemIdColumnName: String): DataFrame = {
-    purchases.select(column("ts"), column("item_id").as(newItemIdColumnName))
+  def selectItemGroupFromPurchases(purchases: DataFrame, newItemIdColumnName: String): DataFrame = {
+    purchases.select(column("ts"), column("user_id"), column("item_id").as(newItemIdColumnName))
   }
 }
 
