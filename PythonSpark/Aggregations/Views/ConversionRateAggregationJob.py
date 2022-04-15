@@ -3,6 +3,7 @@ from pyspark.sql import DataFrame
 from Aggregations.Views.ViewsAggregationJob import ViewsAggregationJob
 from Utils.Loading import load_dynamic_table
 from Utils.Parsing import count_data_frame_column
+from Utils.RichArgumentParser import RichArgumentParser
 
 
 class ConversionRateAggregationJob(ViewsAggregationJob):
@@ -21,4 +22,7 @@ class ConversionRateAggregationJob(ViewsAggregationJob):
 
         return joined.select("item_id", "purchases_count / views_count")
 
-
+    @staticmethod
+    def parser() -> RichArgumentParser:
+        return ViewsAggregationJob.parser() \
+            .add_dynamic_table_data_source("purchases")

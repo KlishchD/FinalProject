@@ -4,6 +4,8 @@ from pyspark.sql import DataFrame
 
 from Aggregations.AggregationJob import AggregationJob
 from Utils.Loading import load_dynamic_table, load_static_table
+from Utils.Parsing import filter_data_frame
+from Utils.RichArgumentParser import RichArgumentParser
 
 
 class PurchasesAggregationJob(AggregationJob, ABC):
@@ -14,5 +16,14 @@ class PurchasesAggregationJob(AggregationJob, ABC):
         }
 
     def process(self, data: dict) -> DataFrame:
-        #TODO: It
-        pass
+        joined = data["purchases"].join(data["ips"], "ip")
+        return filter_data_frame(joined,
+                                 self.arguments.locations,
+                                 self.arguments.time_frame,
+                                 self.arguments.devices)
+
+    @staticmethod
+    def parser() -> RichArgumentParser:
+        return AggregationJob.parser() \
+            .add_dynamic_table_data_source("purchases") \
+            .add_static_table_data_source("ips")

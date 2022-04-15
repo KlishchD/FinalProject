@@ -26,13 +26,13 @@ def load_dynamic_table(name: str, arguments: argparse.Namespace, spark: SparkSes
                                arguments.read_service_account_key_filepath,
                                spark)
 
-    return load_data_frame_from_file(f"{name}fp", "parquet", spark)
+    return load_data_frame_from_file(f"{name}_filepath", "parquet", spark)
 
 
 def load_static_table(name: str, arguments: argparse.Namespace, spark: SparkSession) -> DataFrame:
     arguments_str = arguments.__dict__
     if arguments.mode == "prod":
         set_up_redis(arguments.redis_host, arguments.redis_port, spark)
-        return load_data_frame_from_redis(arguments_str[f"{name}kp"], arguments_str[f"{name}kc"], spark)
+        return load_data_frame_from_redis(arguments_str[f"{name}_keys_pattern"], arguments_str[f"{name}_key_column"], spark)
 
-    return load_data_frame_from_file(arguments_str[f"{name}fp"], "csv", spark)
+    return load_data_frame_from_file(arguments_str[f"{name}_filepath"], "csv", spark)
