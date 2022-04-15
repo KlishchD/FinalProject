@@ -6,6 +6,13 @@ from Utils.Parsing import count_data_frame_columns
 
 
 class GroupedItemsAggregationJob(PurchasesAggregationJob):
+    """
+    This class calculates a number of times two items are bought together.
+    Result is a dataframe with columns:
+     item1 - first item
+     item2 - second
+     count - number item1 and item2 were bought together in specified locations, devices and time frame
+    """
 
     def process(self, data: dict) -> DataFrame:
         filtered_purchases_with_locations = super(GroupedItemsAggregationJob, self).process(data)

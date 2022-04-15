@@ -7,6 +7,13 @@ from Utils.RichArgumentParser import RichArgumentParser
 
 
 class ConversionRateAggregationJob(ViewsAggregationJob):
+    """
+    This class calculates a conversion rate (number of times item was bought / number of times of was viewed).
+    Result is a dataframe with columns:
+     item_id - id of the item
+     rate - calculated conversion rate for items in specified locations, devices and time frame
+    """
+
     def load(self) -> dict:
         result = super(ConversionRateAggregationJob, self).load()
         result["purchases"] = load_dynamic_table("purchases", self.arguments, self.spark)

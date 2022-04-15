@@ -7,6 +7,16 @@ from Utils.TimeParsing import convert_unix_to_timestamp
 
 
 class PurchasesPreprocessingJob(PreprocessingJob):
+    """
+    This class prepares purchases for further processing (fixes time and explodes items).
+    Result is a dataframe with columns:
+     user_id - id of a user, who made a purchase
+     ip - ip address of a device where using which purchase was made
+     ts - time when purchase was made
+     item_id - id of an item purchased
+     amount - amount of item with item_id purchased
+     order_id - id of an order itself
+    """
 
     def process(self, data: dict) -> DataFrame:
         time_fixed = convert_unix_to_timestamp(data["data"], "ts")
