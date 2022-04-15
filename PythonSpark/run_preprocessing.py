@@ -1,11 +1,15 @@
+import logging
 import sys
 
 from JobManagment.JobRunner import JobRunner
 from Preprocessing.PurchasesPreprocessingJob import PurchasesPreprocessingJob
 from Preprocessing.ViewsPreprocessingJob import ViewsPreprocessingJob
+from Utils.Services import set_up_logging
 
 
 def __main__():
+    set_up_logging()
+
     runner = JobRunner()
 
     runner.register("views", ViewsPreprocessingJob)
