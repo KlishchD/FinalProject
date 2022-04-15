@@ -5,7 +5,13 @@ import de.halcony.argparse.Parser
 import org.apache.spark.sql.functions.column
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
-
+/**
+ * This class calculates a number of times two items are bought together
+ * Result is a dataframe with columns:
+ *   item1 - first item
+ *   item2 - second
+ *   count - number item1 and item2 were bought together in specified locations, devices and time frame
+ */
 class GroupedItemsAggregationJob(arguments: Map[String, String], spark: SparkSession) extends PurchasesAggregationJob(arguments, spark) {
   override def process(data: Map[String, DataFrame]): DataFrame = {
     val filteredPurchasesWithLocations = super.process(data)
