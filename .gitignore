@@ -139,3 +139,6 @@ generators/key.json
 Docker/airflow_data/
 Docker/airflow
 generators/*.csv
+ScalaSpark/.bsp
+ScalaSpark/.idea
+ScalaSpark/resources
