@@ -1,0 +1,20 @@
+[
+  {
+    "description": "Id of the first item",
+    "mode": "REQUIRED",
+    "name": "item1",
+    "type": "STRING"
+  },
+  {
+    "description": "Id of the second item",
+    "mode": "REQUIRED",
+    "name": "item2",
+    "type": "STRING"
+  },
+  {
+    "description": "Number of times item1 and item2 were bought together",
+    "mode": "REQUIRED",
+    "name": "count",
+    "type": "INTEGER"
+  }
+]

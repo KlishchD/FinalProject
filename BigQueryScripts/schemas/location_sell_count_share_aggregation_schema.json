@@ -1,0 +1,14 @@
+[
+  {
+    "description": "Location",
+    "mode": "REQUIRED",
+    "name": "country",
+    "type": "STRING"
+  },
+  {
+    "description": "Share of sell count between locations",
+    "mode": "REQUIRED",
+    "name": "share",
+    "type": "FLOAT"
+  }
+]

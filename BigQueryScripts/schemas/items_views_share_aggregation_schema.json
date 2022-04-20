@@ -1,0 +1,14 @@
+[
+  {
+    "description": "Id of an item",
+    "mode": "REQUIRED",
+    "name": "item_id",
+    "type": "STRING"
+  },
+  {
+    "description": "Share of views of an item with item_id id",
+    "mode": "REQUIRED",
+    "name": "share",
+    "type": "FLOAT"
+  }
+]
