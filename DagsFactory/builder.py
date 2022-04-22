@@ -1,0 +1,48 @@
+import json
+import os.path
+import sys
+
+
+def replace_parameters(parameters: dict, line: str) -> str:
+    """
+    Replaces all marks in line form template to real value
+    :param parameters: dict (mark, value)
+    :param line: line where to replace marks
+    :return: line with replaced marks
+    """
+    for key, value in parameters.items():
+        line = line.replace(f"${key}", str(value))
+    return line
+
+
+def generate_dag(parameters: dict, templates_dir_path: str) -> None:
+    """
+    :param parameters: parameters that are used to create dag
+    :param templates_dir_path: path to a directory with dags templates
+    """
+    with open(f"{templates_dir_path}/{parameters['mode']}_template.py") as template:
+        with open(parameters["result_filepath"], "w+") as result:
+            for line in template:
+                result.write(replace_parameters(parameters["dag_parameters"], line))
+
+
+def get_filepaths_to_process(filepath: str) -> list:
+    """
+    :param filepath: path from cli
+    :return: list of configs' filepaths
+    """
+    if os.path.isdir(filepath):
+        relative_paths = os.listdir(filepath)
+        return [filepath + "/" + relative_path for relative_path in relative_paths]
+    return [filepath]
+
+
+def __main__():
+    filepath = sys.argv[1]
+    templates_dir_path = sys.argv[2] if len(sys.argv) > 2 else "."
+    for file in get_filepaths_to_process(filepath):
+        generate_dag(json.load(open(file)), templates_dir_path)
+
+
+if __name__ == "__main__":
+    __main__()
