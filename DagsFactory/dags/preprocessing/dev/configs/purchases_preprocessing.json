@@ -1,0 +1,14 @@
+
+{
+  "result_filepath": "preprocessing_dev/dags/purchases_preprocessing.py",
+  "mode": "dev",
+  "dag_parameters": {
+    "dag_id": "purchases_preprocessing",
+    "app_name": "purchases",
+    "schedule_interval": "None",
+    "configs_filepath": "/usr/local/airflow/dags/preprocessing/purchases_preprocessing_config.json",
+    "job_filepath": "/usr/local/airflow/dags/preprocessing/preprocessing.jar",
+    "job_name": "purchases",
+    "spark_app_name": "purchases"
+  }
+}

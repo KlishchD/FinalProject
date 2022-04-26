@@ -1,0 +1,15 @@
+
+{
+  "result_filepath": "aggregations_prod/dags/grouped_items_aggregation.py",
+  "mode": "prod",
+  "dag_parameters": {
+    "dag_id": "grouped_items_aggregation",
+    "schedule_interval": "None",
+    "configs_filepath": "/usr/local/airflow/dags/aggregations/grouped_items_aggregation_config.json",
+    "gcp_connection_id": "gcp_dataproc_connection",
+    "job_filepath": "/usr/local/airflow/dags/aggregations/aggregations.jar",
+    "region": "europe-central2",
+    "job_name": "groupedItems",
+    "spark_app_name": "grouped_items"
+  }
+}
