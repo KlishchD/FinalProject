@@ -4,11 +4,11 @@
   "mode": "dev",
   "dag_parameters": {
     "dag_id": "grouped_items_aggregation",
-    "app_name": "grouped_items",
     "schedule_interval": "None",
     "configs_filepath": "/usr/local/airflow/dags/aggregations/grouped_items_aggregation_config.json",
     "job_filepath": "/usr/local/airflow/dags/aggregations/aggregations.jar",
     "job_name": "groupedItems",
-    "spark_app_name": "grouped_items"
+    "spark_app_name": "grouped_items",
+    "spark_master": "local[*]"
   }
 }

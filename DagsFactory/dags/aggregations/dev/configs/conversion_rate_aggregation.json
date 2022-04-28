@@ -4,11 +4,11 @@
   "mode": "dev",
   "dag_parameters": {
     "dag_id": "conversion_rate_aggregation",
-    "app_name": "conversion_rate",
     "schedule_interval": "None",
     "configs_filepath": "/usr/local/airflow/dags/aggregations/conversion_rate_aggregation_config.json",
     "job_filepath": "/usr/local/airflow/dags/aggregations/aggregations.jar",
     "job_name": "conversionRate",
-    "spark_app_name": "conversion_rate"
+    "spark_app_name": "conversion_rate",
+    "spark_master": "local[*]"
   }
 }

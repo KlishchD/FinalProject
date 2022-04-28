@@ -4,11 +4,11 @@
   "mode": "dev",
   "dag_parameters": {
     "dag_id": "profit_by_item_aggregation",
-    "app_name": "profit_by_item",
     "schedule_interval": "None",
     "configs_filepath": "/usr/local/airflow/dags/aggregations/profit_by_item_aggregation_config.json",
     "job_filepath": "/usr/local/airflow/dags/aggregations/aggregations.jar",
     "job_name": "profitByItem",
-    "spark_app_name": "profit_by_item"
+    "spark_app_name": "profit_by_item",
+    "spark_master": "local[*]"
   }
 }

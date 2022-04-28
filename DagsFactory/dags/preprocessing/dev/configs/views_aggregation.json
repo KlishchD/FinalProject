@@ -9,6 +9,7 @@
     "configs_filepath": "/usr/local/airflow/dags/preprocessing/views_preprocessing_config.json",
     "job_filepath": "/usr/local/airflow/dags/preprocessing/preprocessing.jar",
     "job_name": "views",
-    "spark_app_name": "views"
+    "spark_app_name": "views",
+    "spark_master": "local[*]"
   }
 }

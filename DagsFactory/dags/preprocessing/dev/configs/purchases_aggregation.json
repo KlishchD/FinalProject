@@ -9,6 +9,7 @@
     "configs_filepath": "/usr/local/airflow/dags/preprocessing/purchases_preprocessing_config.json",
     "job_filepath": "/usr/local/airflow/dags/preprocessing/preprocessing.jar",
     "job_name": "purchases",
-    "spark_app_name": "purchases"
+    "spark_app_name": "purchases",
+    "spark_master": "local[*]"
   }
 }

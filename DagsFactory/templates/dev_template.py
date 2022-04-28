@@ -8,5 +8,14 @@ with DAG(dag_id='$dag_id', start_date=pendulum.parse("2020/01/01"), schedule_int
 
     run_job = BashOperator(
         task_id="run_job",
-        bash_command=f"spark-submit $job_filepath $job_name dev $spark_app_name {' '.join(configs)}"
+        bash_command=f"spark-submit $job_filepath $job_name $spark_master $spark_app_name dev {' '.join(configs)}"
     )
+#{
+# dag_id
+# schedule_interval
+# configs_filepath
+# job_filepath
+# job_name
+# spark_master
+# spark_app_name
+#}

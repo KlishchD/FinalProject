@@ -4,11 +4,11 @@
   "mode": "dev",
   "dag_parameters": {
     "dag_id": "items_views_count_aggregation",
-    "app_name": "items_views_count",
     "schedule_interval": "None",
     "configs_filepath": "/usr/local/airflow/dags/aggregations/items_views_count_aggregation_config.json",
     "job_filepath": "/usr/local/airflow/dags/aggregations/aggregations.jar",
     "job_name": "itemsViewsCount",
-    "spark_app_name": "items_views_count"
+    "spark_app_name": "items_views_count",
+    "spark_master": "local[*]"
   }
 }
