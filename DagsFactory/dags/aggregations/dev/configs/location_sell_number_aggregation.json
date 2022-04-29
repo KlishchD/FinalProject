@@ -1,6 +1,6 @@
 
 {
-  "result_filepath": "aggregations_dev/dags/location_sell_number_aggregation.py",
+  "result_filepath": "aggregations/dev/dags/location_sell_number_aggregation.py",
   "mode": "dev",
   "dag_parameters": {
     "dag_id": "location_sell_number_aggregation",

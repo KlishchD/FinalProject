@@ -1,12 +1,24 @@
 
 {
-  "result_filepath": "aggregations_prod/dags/conversion_rate_aggregation.py",
+  "result_filepath": "aggregations/prod/dags/conversion_rate_aggregation.py",
   "mode": "prod",
   "dag_parameters": {
     "dag_id": "conversion_rate_aggregation",
     "schedule_interval": "None",
     "configs_filepath": "/usr/local/airflow/dags/aggregations/conversion_rate_aggregation_config.json",
     "gcp_connection_id": "gcp_dataproc_connection",
+    "cluster_config": {
+        "master_config": {
+            "num_instances": 1,
+            "machine_type_uri": "n1-standard-4",
+            "disk_config": {"boot_disk_type": "pd-standard", "boot_disk_size_gb": 512}
+        },
+        "worker_config": {
+            "num_instances": 2,
+            "machine_type_uri": "n1-standard-4",
+            "disk_config": {"boot_disk_type": "pd-standard", "boot_disk_size_gb": 512}
+        }
+    },
     "job_filepath": "/usr/local/airflow/dags/aggregations/aggregations.jar",
     "region": "europe-central2",
     "job_name": "conversionRate",

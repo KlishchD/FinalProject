@@ -1,6 +1,6 @@
 
 {
-  "result_filepath": "preprocessing_dev/dags/purchases_preprocessing.py",
+  "result_filepath": "preprocessing/dev/dags/purchases_preprocessing.py",
   "mode": "dev",
   "dag_parameters": {
     "dag_id": "purchases_preprocessing",

@@ -142,3 +142,5 @@ generators/*.csv
 ScalaSpark/.bsp
 ScalaSpark/.idea
 ScalaSpark/resources
+DagsFactory/dags/*/*/init.py
+DagsFactory/DagsFactory.iml

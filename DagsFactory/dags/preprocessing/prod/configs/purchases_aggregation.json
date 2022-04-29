@@ -1,6 +1,6 @@
 
 {
-  "result_filepath": "preprocessing_prod/dags/purchases_preprocessing.py",
+  "result_filepath": "preprocessing/prod/dags/purchases_preprocessing.py",
   "mode": "prod",
   "dag_parameters": {
     "dag_id": "purchases_preprocessing",
@@ -10,12 +10,18 @@
         "master_config": {
             "num_instances": 1,
             "machine_type_uri": "n1-standard-4",
-            "disk_config": {"boot_disk_type": "pd-standard", "boot_disk_size_gb": 512},
+            "disk_config": {
+                "boot_disk_type": "pd-standard", 
+                "boot_disk_size_gb": 512
+            }
         },
         "worker_config": {
             "num_instances": 2,
             "machine_type_uri": "n1-standard-4",
-            "disk_config": {"boot_disk_type": "pd-standard", "boot_disk_size_gb": 512}
+            "disk_config": {
+                "boot_disk_type": "pd-standard", 
+                "boot_disk_size_gb": 512
+            }
         }
     },
     "gcp_connection_id": "gcp_dataproc_connection",

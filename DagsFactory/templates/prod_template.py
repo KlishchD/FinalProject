@@ -12,7 +12,7 @@ with DAG(dag_id='$dag_id', start_date=pendulum.parse('2020/01/01'), schedule_int
         cluster_config=$cluster_config,
         region='$region',
         gcp_conn_id='$gcp_connection_id',
-        cluster_name="$job_name_temporary_cluster"
+        cluster_name="tempcluster"
     )
 
     run_job = DataprocSubmitSparkJobOperator(
@@ -21,21 +21,13 @@ with DAG(dag_id='$dag_id', start_date=pendulum.parse('2020/01/01'), schedule_int
         gcp_conn_id='$gcp_connection_id',
         arguments=["$job_name", "$spark_master", "$spark_app_name", "prod"] + configs,
         main_class='$job_filepath',
-        cluster_name="$job_name_temporary_cluster"
+        cluster_name="tempcluster"
     )
 
     remove_cluster = DataprocDeleteClusterOperator(
         task_id='remove_temporary_cluster',
-        cluster_name="$job_name_temporary_cluster",
+        cluster_name="tempcluster",
         region="$region"
     )
 
     create_cluster >> run_job >> remove_cluster
-
-#
-#
-#
-# $spark_master
-#
-#
-# }

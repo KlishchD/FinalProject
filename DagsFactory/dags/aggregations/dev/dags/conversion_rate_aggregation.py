@@ -8,5 +8,5 @@ with DAG(dag_id='conversion_rate_aggregation', start_date=pendulum.parse("2020/0
 
     run_job = BashOperator(
         task_id="run_job",
-        bash_command=f"spark-submit /usr/local/airflow/dags/aggregations/aggregations.jar conversionRate dev conversion_rate {' '.join(configs)}"
+        bash_command=f"spark-submit /usr/local/airflow/dags/aggregations/aggregations.jar conversionRate local[*] conversion_rate dev {' '.join(configs)}"
     )

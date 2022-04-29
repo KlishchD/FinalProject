@@ -8,5 +8,5 @@ with DAG(dag_id='items_views_share_aggregation', start_date=pendulum.parse("2020
 
     run_job = BashOperator(
         task_id="run_job",
-        bash_command=f"spark-submit /usr/local/airflow/dags/aggregations/aggregations.jar itemsViews dev items_views_share {' '.join(configs)}"
+        bash_command=f"spark-submit /usr/local/airflow/dags/aggregations/aggregations.jar itemsViews local[*] items_views_share dev {' '.join(configs)}"
     )

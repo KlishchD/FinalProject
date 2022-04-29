@@ -8,5 +8,5 @@ with DAG(dag_id='views_preprocessing', start_date=pendulum.parse("2020/01/01"), 
 
     run_job = BashOperator(
         task_id="run_job",
-        bash_command=f"spark-submit /usr/local/airflow/dags/preprocessing/preprocessing.jar views dev views {' '.join(configs)}"
+        bash_command=f"spark-submit /usr/local/airflow/dags/preprocessing/preprocessing.jar views local[*] views dev {' '.join(configs)}"
     )
