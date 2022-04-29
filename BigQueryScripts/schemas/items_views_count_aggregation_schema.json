@@ -1,14 +1,17 @@
 [
   {
     "description": "Id of an item",
-    "mode": "REQUIRED",
     "name": "item_id",
     "type": "STRING"
   },
   {
     "description": "Number of times item with item_id id was viewed",
-    "mode": "REQUIRED",
     "name": "amount",
     "type": "INTEGER"
+  },
+  {
+    "description": "Time stamp when aggregation was finished",
+    "name": "ts",
+    "type": "TIMESTAMP"
   }
 ]

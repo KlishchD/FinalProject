@@ -1,14 +1,17 @@
 [
   {
     "description": "Id of an item",
-    "mode": "REQUIRED",
     "name": "item_id",
     "type": "STRING"
   },
   {
     "description": "Amount of money item with item_id id generated",
-    "mode": "REQUIRED",
     "name": "profit",
     "type": "FLOAT"
+  },
+  {
+    "description": "Time stamp when aggregation was finished",
+    "name": "ts",
+    "type": "TIMESTAMP"
   }
 ]
