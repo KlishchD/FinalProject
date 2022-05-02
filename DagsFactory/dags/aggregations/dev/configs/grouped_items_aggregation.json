@@ -1,6 +1,6 @@
 
 {
-  "result_filepath": "aggregations/dev/dags/grouped_items_aggregation.py",
+  "result_filepath": "dags/aggregations/dev/dags/grouped_items_aggregation.py",
   "mode": "dev",
   "dag_parameters": {
     "dag_id": "grouped_items_aggregation",

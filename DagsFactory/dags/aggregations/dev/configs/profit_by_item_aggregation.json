@@ -1,6 +1,6 @@
 
 {
-  "result_filepath": "aggregations/dev/dags/profit_by_item_aggregation.py",
+  "result_filepath": "dags/aggregations/dev/dags/profit_by_item_aggregation.py",
   "mode": "dev",
   "dag_parameters": {
     "dag_id": "profit_by_item_aggregation",

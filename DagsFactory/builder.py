@@ -37,11 +37,23 @@ def get_filepaths_to_process(filepath: str) -> list:
     return [filepath]
 
 
+def parse_cluster_size(parameters: dict) -> None:
+    """
+    Substitutes cluster size with appropriate cluster config
+    :param parameters: loaded config for dag
+    """
+    cluster_size = parameters["dag_parameters"]["cluster_config"]
+    parameters["dag_parameters"]["cluster_config"] = json.load(open(f"cluster_sizes/{cluster_size}_size.json"))
+
+
 def __main__():
     filepath = sys.argv[1]
     templates_dir_path = sys.argv[2] if len(sys.argv) > 2 else "."
     for file in get_filepaths_to_process(filepath):
-        generate_dag(json.load(open(file)), templates_dir_path)
+        parameters = json.load(open(file))
+        if parameters["mode"] == "prod":
+            parse_cluster_size(parameters)
+        generate_dag(parameters, templates_dir_path)
 
 
 if __name__ == "__main__":

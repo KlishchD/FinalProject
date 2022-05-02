@@ -1,6 +1,6 @@
 
 {
-  "result_filepath": "preprocessing/dev/dags/views_preprocessing.py",
+  "result_filepath": "dags/preprocessing/dev/dags/views_preprocessing.py",
   "mode": "dev",
   "dag_parameters": {
     "dag_id": "views_preprocessing",

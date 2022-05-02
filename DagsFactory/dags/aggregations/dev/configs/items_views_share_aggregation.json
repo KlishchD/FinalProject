@@ -1,6 +1,6 @@
 
 {
-  "result_filepath": "aggregations/dev/dags/items_views_share_aggregation.py",
+  "result_filepath": "dags/aggregations/dev/dags/items_views_share_aggregation.py",
   "mode": "dev",
   "dag_parameters": {
     "dag_id": "items_views_share_aggregation",
