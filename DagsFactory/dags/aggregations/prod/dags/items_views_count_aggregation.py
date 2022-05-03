@@ -9,7 +9,7 @@ with DAG(dag_id='items_views_count_aggregation', start_date=pendulum.parse('2020
 
     create_cluster = DataprocCreateClusterOperator(
         task_id="set_up_temporary_cluster",
-        cluster_config={'master_config': {'num_instances': 1, 'machine_type_uri': 'n1-standard-4', 'disk_config': {'boot_disk_type': 'pd-standard', 'boot_disk_size_gb': 512}}, 'worker_config': {'num_instances': 3, 'machine_type_uri': 'n1-standard-4', 'disk_config': {'boot_disk_type': 'pd-standard', 'boot_disk_size_gb': 512}}},
+        cluster_config={'master_config': {'num_instances': 1, 'machine_type_uri': 'n1-standard-4', 'disk_config': {'boot_disk_type': 'pd-standard', 'boot_disk_size_gb': 512}}, 'worker_config': {'num_instances': 0, 'machine_type_uri': 'n1-standard-4', 'disk_config': {'boot_disk_type': 'pd-standard', 'boot_disk_size_gb': 512}}},
         region='europe-central2',
         gcp_conn_id='gcp_dataproc_connection',
         cluster_name="tempcluster"
