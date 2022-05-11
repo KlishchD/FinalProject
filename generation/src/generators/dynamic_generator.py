@@ -1,84 +1,13 @@
 import argparse
-import datetime
 import logging
 import random
 
 import pandas
-from dateutil import parser
 
+from utils.loading import load
+from utils.time import get_current_time_with_random_delta, add_random_delta
 from utils import FileConnector
 from utils.GCPConnector import GCPConnector
-
-
-def load(filepath: str, names: list) -> pandas.DataFrame:
-    """
-    Loads users from a file
-    :param filepath: path to a file
-    :param names: list that contains column names
-    :return: pandas DataFrame with users
-    """
-    logging.info(f"Started loading {filepath}")
-    data = pandas.read_csv(filepath, names=names)
-    logging.info(f"Finished loading {filepath}")
-    return data
-
-
-def generate_random_timedelta(min_seconds_delta: int,
-                              max_seconds_delta: int,
-                              min_minutes_delta: int,
-                              max_minutes_delta: int) -> datetime.timedelta:
-    """
-    Generates random time delta
-    :param min_seconds_delta: lowest possible amount of seconds
-    :param max_seconds_delta: biggest possible amount of seconds
-    :param min_minutes_delta: lowest possible amount of minutes
-    :param max_minutes_delta: biggest possible amount of minutest
-    :return: time delta
-    """
-    return datetime.timedelta(minutes=random.randint(min_minutes_delta, max_minutes_delta),
-                              seconds=random.randint(min_seconds_delta, max_seconds_delta))
-
-
-def get_current_time_with_random_delta(min_seconds_delta: int,
-                                       max_seconds_delta: int,
-                                       min_minutes_delta: int,
-                                       max_minutes_delta: int) -> datetime.datetime:
-    """
-    Generates random time from current time by applying random time delta on it
-    :param min_seconds_delta: lowest possible amount of seconds
-    :param max_seconds_delta: biggest possible amount of seconds
-    :param min_minutes_delta: lowest possible amount of minutes
-    :param max_minutes_delta: biggest possible amount of minutest
-    :return: current time moved on some time delta
-    """
-    time = datetime.datetime.now()
-    delta = generate_random_timedelta(min_seconds_delta, max_seconds_delta, min_minutes_delta, max_minutes_delta)
-    sign = 1 if random.randint(0, 1) == 1 else -1
-    return time + delta * sign
-
-
-def add_random_delta(times: list,
-                     min_seconds_delta: int,
-                     max_seconds_delta: int,
-                     min_minutes_delta: int,
-                     max_minutes_delta: int) -> list:
-    """
-    Generates array with times from original one, but moved on some random time delta
-    :param times:
-    :param min_seconds_delta: lowest possible amount of seconds
-    :param max_seconds_delta: biggest possible amount of seconds
-    :param min_minutes_delta: lowest possible amount of minutes
-    :param max_minutes_delta: biggest possible amount of minutest
-
-    :return: current time moved on some time delta
-    """
-    result = []
-    for time in times:
-        time = parser.parse(str(time))
-        delta = generate_random_timedelta(min_seconds_delta, max_seconds_delta, min_minutes_delta, max_minutes_delta)
-        result.append(time + delta)
-
-    return result
 
 
 def generate_oder_id(min_order_id: int,
@@ -263,7 +192,6 @@ def parse_args() -> argparse.Namespace:
                              dest='users_filepath', type=str)
     args_parser.add_argument('--items_filepath', default='items.csv', help='Path where items were writen',
                              dest='items_filepath', type=str)
-
 
     return args_parser.parse_args()
 

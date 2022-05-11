@@ -144,3 +144,8 @@ ScalaSpark/.idea
 ScalaSpark/resources
 DagsFactory/dags/*/*/init.py
 DagsFactory/DagsFactory.iml
+StreamingJob/JobManagment
+StreamingJob/hot_map.py
+StreamingJob/StreamingJob.iml
+generation/src/generators/*.csv
+generation/src/generators/*.json
