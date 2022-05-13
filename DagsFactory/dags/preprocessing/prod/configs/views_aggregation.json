@@ -1,0 +1,17 @@
+
+{
+  "result_filepath": "dags/preprocessing/prod/dags/views_preprocessing.py",
+  "mode": "prod",
+  "dag_parameters": {
+    "dag_id": "views_preprocessing",
+    "schedule_interval": "None",
+    "configs_filepath": "/usr/local/airflow/dags/preprocessing/views_preprocessing_config.json",
+    "cluster_config": "s",
+    "gcp_connection_id": "gcp_dataproc_connection",
+    "job_filepath": "/usr/local/airflow/dags/preprocessing/preprocessing.jar",
+    "region": "europe-central2",
+    "job_name": "views",
+    "spark_app_name": "views", 
+    "spark_master": ""
+  }
+}

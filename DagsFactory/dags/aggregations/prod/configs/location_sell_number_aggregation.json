@@ -1,0 +1,16 @@
+
+{
+  "result_filepath": "dags/aggregations/prod/dags/location_sell_number_aggregation.py",
+  "mode": "prod",
+  "dag_parameters": {
+    "dag_id": "location_sell_number_aggregation",
+    "schedule_interval": "None",
+    "configs_filepath": "/usr/local/airflow/dags/aggregations/location_sell_number_aggregation_config.json",
+    "gcp_connection_id": "gcp_dataproc_connection",
+    "cluster_config": "s",
+    "job_filepath": "/usr/local/airflow/dags/aggregations/aggregations.jar",
+    "region": "europe-central2",
+    "job_name": "locationsShare",
+    "spark_app_name": "location_sell_number"
+  }
+}

@@ -1,8 +1,7 @@
 import sys
 
 from JobManagment.JobRunner import JobRunner
-from Preprocessing.PurchasesPreprocessingJob import PurchasesPreprocessingJob
-from Preprocessing.ViewsPreprocessingJob import ViewsPreprocessingJob
+from Streaming.HotMapAggregation import HotMapAggregation
 from Utils.Services import set_up_logging
 
 
@@ -11,8 +10,7 @@ def __main__():
 
     runner = JobRunner()
 
-    runner.register("views", ViewsPreprocessingJob)
-    runner.register("purchases", PurchasesPreprocessingJob)
+    runner.register("hotMap", HotMapAggregation)
 
     job_name = sys.argv[1]
     spark_master = sys.argv[2]
@@ -24,3 +22,5 @@ def __main__():
 
 if __name__ == "__main__":
     __main__()
+
+

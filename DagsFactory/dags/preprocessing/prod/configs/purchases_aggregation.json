@@ -1,0 +1,17 @@
+
+{
+  "result_filepath": "dags/preprocessing/prod/dags/purchases_preprocessing.py",
+  "mode": "prod",
+  "dag_parameters": {
+    "dag_id": "purchases_preprocessing",
+    "schedule_interval": "None",
+    "configs_filepath": "/usr/local/airflow/dags/preprocessing/purchases_preprocessing_config.json",
+    "cluster_config": "s",
+    "gcp_connection_id": "gcp_dataproc_connection",
+    "job_filepath": "/usr/local/airflow/dags/preprocessing/preprocessing.jar",
+    "region": "europe-central2",
+    "job_name": "purchases",
+    "spark_app_name": "purchases", 
+    "spark_master": ""
+  }
+}

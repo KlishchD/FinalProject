@@ -1,0 +1,15 @@
+
+{
+  "result_filepath": "dags/preprocessing/dev/dags/views_preprocessing.py",
+  "mode": "dev",
+  "dag_parameters": {
+    "dag_id": "views_preprocessing",
+    "app_name": "views",
+    "schedule_interval": "None",
+    "configs_filepath": "/usr/local/airflow/dags/preprocessing/views_preprocessing_config.json",
+    "job_filepath": "/usr/local/airflow/dags/preprocessing/preprocessing.jar",
+    "job_name": "views",
+    "spark_app_name": "views",
+    "spark_master": "local[*]"
+  }
+}

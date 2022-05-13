@@ -1,0 +1,16 @@
+
+{
+  "result_filepath": "dags/aggregations/prod/dags/profit_by_item_aggregation.py",
+  "mode": "prod",
+  "dag_parameters": {
+    "dag_id": "profit_by_item_aggregation",
+    "schedule_interval": "None",
+    "configs_filepath": "/usr/local/airflow/dags/aggregations/profit_by_item_aggregation_config.json",
+    "gcp_connection_id": "gcp_dataproc_connection",
+    "cluster_config": "s",
+    "job_filepath": "/usr/local/airflow/dags/aggregations/aggregations.jar",
+    "region": "europe-central2",
+    "job_name": "profitByItem",
+    "spark_app_name": "profit_by_item"
+  }
+}
