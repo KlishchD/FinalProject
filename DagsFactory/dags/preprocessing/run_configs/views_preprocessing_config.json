@@ -1,0 +1,5 @@
+{
+  "-datafp": "/usr/local/airflow/dags/data/views.csv",
+  "-dataf": "csv",
+  "-rfp": "/usr/local/airflow/dags/data/viewsp"
+}

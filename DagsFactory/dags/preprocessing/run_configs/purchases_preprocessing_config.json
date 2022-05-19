@@ -1,0 +1,5 @@
+{
+  "-datafp": "/usr/local/airflow/dags/data/purchases.json",
+  "-dataf": "json",
+  "-rfp": "/usr/local/airflow/dags/data/purchasesp"
+}

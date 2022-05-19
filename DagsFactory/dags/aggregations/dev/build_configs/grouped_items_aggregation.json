@@ -5,7 +5,7 @@
   "dag_parameters": {
     "dag_id": "grouped_items_aggregation",
     "schedule_interval": "None",
-    "configs_filepath": "/usr/local/airflow/dags/aggregations/grouped_items_aggregation_config.json",
+    "configs_filepath": "/usr/local/airflow/dags/aggregations/configs/grouped_items_aggregation_config.json",
     "job_filepath": "/usr/local/airflow/dags/aggregations/aggregations.jar",
     "job_name": "groupedItems",
     "spark_app_name": "grouped_items",

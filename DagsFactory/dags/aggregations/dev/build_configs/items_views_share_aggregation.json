@@ -5,9 +5,9 @@
   "dag_parameters": {
     "dag_id": "items_views_share_aggregation",
     "schedule_interval": "None",
-    "configs_filepath": "/usr/local/airflow/dags/aggregations/items_views_share_aggregation_config.json",
+    "configs_filepath": "/usr/local/airflow/dags/aggregations/configs/items_views_share_aggregation_config.json",
     "job_filepath": "/usr/local/airflow/dags/aggregations/aggregations.jar",
-    "job_name": "itemsViews",
+    "job_name": "itemsViewsShare",
     "spark_app_name": "items_views_share",
     "spark_master": "local[*]"
   }

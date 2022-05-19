@@ -8,5 +8,5 @@ with DAG(dag_id='$dag_id', start_date=pendulum.parse("2020/01/01"), schedule_int
 
     run_job = BashOperator(
         task_id="run_job",
-        bash_command=f"spark-submit $job_filepath $job_name $spark_master $spark_app_name dev {' '.join(configs)}"
+        bash_command=f"spark-submit --packages de.halcony:scala-argparse_2.13:1.1.11,org.postgresql:postgresql:42.3.3 $job_filepath $job_name $spark_master $spark_app_name -m dev {' '.join(configs)}"
     )
