@@ -130,14 +130,11 @@ dmypy.json
 
 Docker/airflow_data
 Docker/airflow/logs
-Docker/airflow/airflow.cfg
 Docker/airflow/airflow.db
 Docker/airflow/airflow.db-journal
 Docker/airflow/webserver_config.py
 Docker/airflow/dags/key.json
 generators/key.json
-Docker/airflow_data/
-Docker/airflow
 generators/*.csv
 ScalaSpark/.bsp
 ScalaSpark/.idea
@@ -152,8 +149,6 @@ generation/src/generators/*.json
 PythonSpark/*.iml
 PythonSpark/*.zip
 DagsFactory/*.iml
-Docker/data
-Docker/kafka
 generation/finalproject.generation.iml
 .idea
 .bsp
