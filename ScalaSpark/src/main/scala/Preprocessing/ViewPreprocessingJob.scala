@@ -1,5 +1,10 @@
 package Preprocessing
 
+import JobManagment.JobCompanion
+import Utils.Parsing.{convertStringToTimeStamp, repartitionByDate}
+import de.halcony.argparse.Parser
+import org.apache.spark.sql.{DataFrame, SparkSession}
+
 /**
  * This class prepares views for further processing (fixes time)
  * Result is dataframe with columns:

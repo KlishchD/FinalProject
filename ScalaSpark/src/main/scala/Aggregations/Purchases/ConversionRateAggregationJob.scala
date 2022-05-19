@@ -1,5 +1,13 @@
 package Aggregations.Purchases
 
+import JobManagment.JobCompanion
+import Utils.ArgumentsParsing.RichParser
+import Utils.Loading.loadDynamic
+import Utils.Parsing.countColumn
+import de.halcony.argparse.Parser
+import org.apache.spark.sql.functions.{column, expr}
+import org.apache.spark.sql.{DataFrame, SparkSession}
+
 /**
  * This class calculates a conversion rate (number of times item was bought / number of times of was viewed)
  * Result is a dataframe with columns:

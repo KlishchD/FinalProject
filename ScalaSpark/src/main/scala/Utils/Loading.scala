@@ -36,9 +36,8 @@ object Loading {
   }
 
   def loadFromFile(filepath: String, format: String, spark: SparkSession): DataFrame = {
-    spark.read
-      .format(format)
-      .load(filepath)
+    if (format.toLowerCase() == "json") loadJSON(filepath, spark)
+    else loadCSV(filepath, header = true, spark)
   }
 
   def loadParquet(filepath: String, spark: SparkSession): DataFrame = {

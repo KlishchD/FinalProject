@@ -1,4 +1,4 @@
-package Aggregations.Purchases
+package Aggregations.Views
 
 import Aggregations.AggregationJob
 import JobManagment.JobCompanion
@@ -8,25 +8,28 @@ import Utils.Parsing.filterData
 import de.halcony.argparse.Parser
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
-abstract class PurchasesAggregationJob(arguments: Map[String, String], spark: SparkSession) extends AggregationJob(arguments, spark) {
+abstract class ViewsAggregationJob(arguments: Map[String, String], spark: SparkSession) extends AggregationJob(arguments, spark) {
   override def load(): Map[String, DataFrame] = {
     Map(
-      "purchases" -> loadDynamic("purchases", arguments, spark),
+      "views" -> loadDynamic("views", arguments, spark),
       "ips" -> loadStatic("ips", arguments, spark)
     )
   }
 
   override def process(data: Map[String, DataFrame]): DataFrame = {
-    val purchasesWithLocations = data("purchases").join(data("ips"), "ip")
+    val viewsWithLocations = data("views").join(data("ips"), "ip")
 
-    filterData(arguments("timeFrame"), arguments("devices"), arguments("locations"), purchasesWithLocations)
+    filterData(arguments("timeFrame"), arguments("devices"), arguments("locations"), viewsWithLocations)
   }
 }
 
-object PurchasesAggregationJob extends JobCompanion {
+object ViewsAggregationJob extends JobCompanion {
   override def parser(): Parser = {
     AggregationJob.parser()
-      .addDynamicTableDataSource("purchases")
+      .addDynamicTableDataSource("views")
       .addStaticTableDataSource("ips")
+      .addTimeFrame()
+      .addDevices()
+      .addLocation()
   }
 }

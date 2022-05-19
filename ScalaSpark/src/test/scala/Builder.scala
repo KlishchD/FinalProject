@@ -1,7 +1,6 @@
+import Utils.Parsing.convertStringToTimeStamp
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.{DataFrame, SparkSession}
-
-import scala.Utils.Parsing.convertStringToTimeStamp
 
 object Builder {
 

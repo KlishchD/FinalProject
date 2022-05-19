@@ -14,6 +14,10 @@ object Parsing {
     data.withColumn(columnName, to_timestamp(column(columnName)))
   }
 
+  def addColumnWithCurrentTime(columnName: String, data: DataFrame): DataFrame = {
+    data.withColumn(columnName, current_timestamp())
+  }
+
   def repartitionByDate(columnName: String, data: DataFrame): DataFrame = {
     data.repartitionByRange(to_date(column(columnName)))
   }

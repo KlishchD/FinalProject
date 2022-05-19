@@ -1,6 +1,6 @@
 package Utils
 
-import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.{DataFrame, SaveMode}
 
 import java.util.Properties
 
@@ -17,6 +17,7 @@ object Writing {
     properties.put("driver", "org.postgresql.Driver")
 
     data.write
+      .mode(SaveMode.Append)
       .jdbc(url, table, properties)
   }
 

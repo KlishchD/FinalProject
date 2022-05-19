@@ -1,4 +1,8 @@
 package Aggregations.Purchases
+import JobManagment.JobCompanion
+import Utils.Parsing.{countColumn, countShare}
+import de.halcony.argparse.Parser
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 /**
  * This class calculates a number of times some items were sold.
