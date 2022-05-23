@@ -6,7 +6,7 @@
     "dag_id": "purchases_preprocessing",
     "app_name": "purchases",
     "schedule_interval": "None",
-    "configs_filepath": "/usr/local/airflow/dags/preprocessing/purchases_preprocessing_config.json",
+    "configs_filepath": "/usr/local/airflow/dags/preprocessing/configs/purchases_preprocessing_config.json",
     "job_filepath": "/usr/local/airflow/dags/preprocessing/preprocessing.jar",
     "job_name": "purchases",
     "spark_app_name": "purchases",

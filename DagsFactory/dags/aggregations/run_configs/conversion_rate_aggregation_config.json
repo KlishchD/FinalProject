@@ -1,0 +1,9 @@
+{
+  "-ph": "jdbc:postgresql://postgres:3030/aggregations",
+  "-pu": "admin",
+  "-pp": "admin",
+  "-rt": "conversion_rate_aggregation",
+  "-purchasesfp": "/usr/local/airflow/dags/data/purchasesp",
+  "-viewsfp": "/usr/local/airflow/dags/data/viewsp",
+  "-ipsfp": "/usr/local/airflow/dags/data/ips.csv"
+}

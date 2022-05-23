@@ -4,9 +4,9 @@ from airflow import DAG
 from airflow.operators.bash import BashOperator
 
 with DAG(dag_id='purchases_preprocessing', start_date=pendulum.parse("2020/01/01"), schedule_interval=None) as dag:
-    configs = load_configs('/usr/local/airflow/dags/preprocessing/purchases_preprocessing_config.json')
+    configs = load_configs('/usr/local/airflow/dags/preprocessing/configs/purchases_preprocessing_config.json')
 
     run_job = BashOperator(
         task_id="run_job",
-        bash_command=f"spark-submit /usr/local/airflow/dags/preprocessing/preprocessing.jar purchases local[*] purchases dev {' '.join(configs)}"
+        bash_command=f"spark-submit --packages de.halcony:scala-argparse_2.13:1.1.11,org.postgresql:postgresql:42.3.3 /usr/local/airflow/dags/preprocessing/preprocessing.jar purchases local[*] purchases -m dev {' '.join(configs)}"
     )
