@@ -20,7 +20,7 @@ class GroupedItemsAggregationJob(arguments: Map[String, String], spark: SparkSes
 
     val secondGroup = selectItemGroupFromPurchases(filteredPurchasesWithLocations, "item2")
 
-    val joined = firstGroup.join(secondGroup, "ts", "user_id")
+    val joined = firstGroup.join(secondGroup, "order_id")
 
     val filteredOutGroupsWithSameItems = joined.filter(column("item1") > column("item2"))
 
@@ -28,7 +28,7 @@ class GroupedItemsAggregationJob(arguments: Map[String, String], spark: SparkSes
   }
 
   def selectItemGroupFromPurchases(purchases: DataFrame, newItemIdColumnName: String): DataFrame = {
-    purchases.select(column("ts"), column("user_id"), column("item_id").as(newItemIdColumnName))
+    purchases.select(column("order_id"), column("item_id").as(newItemIdColumnName))
   }
 }
 

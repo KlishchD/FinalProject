@@ -9,9 +9,9 @@ object RunAggregations extends App {
 
   runner.register("conversionRate", classOf[ConversionRateAggregationJob], ConversionRateAggregationJob.parser())
   runner.register("groupedItems", classOf[GroupedItemsAggregationJob], GroupedItemsAggregationJob.parser())
-  runner.register("locationsShare", classOf[LocationsSellNumberShareAggregationJob], LocationsSellNumberShareAggregationJob.parser())
+  runner.register("locationsSellShare", classOf[LocationsSellNumberShareAggregationJob], LocationsSellNumberShareAggregationJob.parser())
   runner.register("profitByItem", classOf[ProfitByItemAggregationJob], ProfitByItemAggregationJob.parser())
-  runner.register("itemViews", classOf[ItemViewsShareAggregationJob], ItemViewsShareAggregationJob.parser())
+  runner.register("itemsViewsShare", classOf[ItemViewsShareAggregationJob], ItemViewsShareAggregationJob.parser())
   runner.register("itemsViewsCount", classOf[ItemsViewsCountAggregationJob], ItemsViewsCountAggregationJob.parser())
 
   val jobName = args(0)

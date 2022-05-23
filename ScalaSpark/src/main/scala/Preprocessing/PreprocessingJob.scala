@@ -13,7 +13,7 @@ abstract class PreprocessingJob(arguments: Map[String, String], spark: SparkSess
     if (arguments("mode") == "prod")
       setUpServiceAccount("readServiceAccountEmail", "readServiceAccountKeyFilepath", spark)
 
-    Map("data" -> loadFromFile(arguments("datafp"), arguments("dataf"), spark))
+    Map("data" -> loadFromFile(arguments("dataFilepath"), arguments("dataFormat"), spark))
   }
 
   override def write(data: DataFrame): Unit = {

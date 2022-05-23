@@ -1,14 +1,19 @@
 package Preprocessing
 
+import JobManagment.JobCompanion
+import Utils.Parsing.{convertUnixToTimeStamp, explodeDataFrameColumn, extractArrayElementToNewColumn, repartitionByDate}
+import de.halcony.argparse.Parser
+import org.apache.spark.sql.{DataFrame, SparkSession}
+
 /**
  * This class prepares purchases for further processing (fixes time and explodes items)
  * Result is a dataframe with columns:
- *   user_id - id of a user, who made a purchase
- *   ip - ip address of a device where using which purchase was made
- *   ts - time when purchase was made
- *   item_id - id of an item purchased
- *   amount - amount of item with item_id purchased
- *   order_id - id of an order itself * @param arguments
+ * user_id - id of a user, who made a purchase
+ * ip - ip address of a device where using which purchase was made
+ * ts - time when purchase was made
+ * item_id - id of an item purchased
+ * amount - amount of item with item_id purchased
+ * order_id - id of an order itself * @param arguments
  */
 class PurchasesPreprocessingJob(arguments: Map[String, String], spark: SparkSession) extends PreprocessingJob(arguments, spark) {
   override def process(data: Map[String, DataFrame]): DataFrame = {
