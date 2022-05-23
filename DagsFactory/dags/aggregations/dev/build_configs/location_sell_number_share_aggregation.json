@@ -1,4 +1,3 @@
-
 {
   "result_filepath": "dags/aggregations/dev/dags/location_sell_number_share_aggregation.py",
   "mode": "dev",
@@ -9,6 +8,7 @@
     "job_filepath": "/usr/local/airflow/dags/aggregations/aggregations.jar",
     "job_name": "locationsSellShare",
     "spark_app_name": "location_sell_number",
-    "spark_master": "local[*]"
+    "spark_master": "local[*]",
+    "requirements": "/usr/local/airflow/dags/aggregations/requirements.txt"
   }
 }
