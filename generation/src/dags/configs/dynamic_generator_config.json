@@ -1,0 +1,9 @@
+{
+  "--views_number": 10000,
+  "--purchases_number": 500,
+  "--sink": "file",
+  "--purchases_filepath": "/usr/local/airflow/dags/data/purchases.json",
+  "--views_filepath": "/usr/local/airflow/dags/data/views.csv",
+  "--users_filepath": "/usr/local/airflow/dags/data/users.csv",
+  "--items_filepath": "/usr/local/airflow/dags/data/items.csv"
+}

@@ -1,0 +1,10 @@
+{
+  "--items_number": 10000,
+  "--users_number": 10000,
+  "--sink": "file",
+  "--users_filepath": "/usr/local/airflow/dags/data/users.csv",
+  "--items_filepath": "/usr/local/airflow/dags/data/items.csv",
+  "--ips_filepath": "/usr/local/airflow/dags/data/ips.csv",
+  "--countries_filepath": "/usr/local/airflow/dags/generation/generators/resources/countries.txt",
+  "--devices_filepath": "/usr/local/airflow/dags/generation/generators/resources/devices.txt"
+}

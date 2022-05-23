@@ -2,7 +2,7 @@ import argparse
 import logging
 from random import randint, uniform
 
-from utils import RedisConnector, FileConnector
+from Utils import RedisConnector, FileConnector
 
 USED_ITEM_ID = {-1}
 
@@ -228,21 +228,21 @@ def parse_arguments() -> argparse.Namespace:
     """
     args_parser = argparse.ArgumentParser(description="Static generator")
 
-    args_parser.add_argument('--items_number', default=10000, help='Items to generate', dest='items_number', type=str)
-    args_parser.add_argument('--min_item_id', default=0, help='Minimal item id', dest='min_item_id', type=str)
-    args_parser.add_argument('--max_item_id', default=100000000, help='Maximal item id', dest='max_item_id', type=str)
+    args_parser.add_argument('--items_number', default=10000, help='Items to generate', dest='items_number', type=int)
+    args_parser.add_argument('--min_item_id', default=0, help='Minimal item id', dest='min_item_id', type=int)
+    args_parser.add_argument('--max_item_id', default=100000000, help='Maximal item id', dest='max_item_id', type=int)
     args_parser.add_argument('--min_item_price', default=0.5, help='Minimal item price', dest='min_item_price',
                              type=float)
     args_parser.add_argument('--max_item_price', default=100000, help='Maximal item price', dest='max_item_price',
                              type=float)
-    args_parser.add_argument('--users_number', default=10000, help='Users to generate', dest='users_number', type=str)
-    args_parser.add_argument('--min_user_id', default=1, help='Minimal user id', dest='min_user_id', type=str)
-    args_parser.add_argument('--max_user_id', default=10000000, help='Maximal user id', dest='max_user_id', type=str)
+    args_parser.add_argument('--users_number', default=10000, help='Users to generate', dest='users_number', type=int)
+    args_parser.add_argument('--min_user_id', default=1, help='Minimal user id', dest='min_user_id', type=int)
+    args_parser.add_argument('--max_user_id', default=10000000, help='Maximal user id', dest='max_user_id', type=int)
     args_parser.add_argument('--min_devices_number', default=1, help='Minimal devices number',
-                             dest='min_devices_number', type=str)
+                             dest='min_devices_number', type=int)
     args_parser.add_argument('--max_devices_number', default=5, help='Maximal devices number',
-                             dest='max_devices_number', type=str)
-    args_parser.add_argument('--sink', default='both', help='Data sink (possible redis, files or both)', dest='sink', type=str)
+                             dest='max_devices_number', type=int)
+    args_parser.add_argument('--sink', default='both', help='Data sink (possible redis, file or both)', dest='sink', type=str)
     args_parser.add_argument('--redis_port', default=6060, help='Port on which redis runs', dest='redis_port', type=str)
     args_parser.add_argument('--redis_host', default='redis', help='Host on which redis runs', dest='redis_host',
                              type=str)

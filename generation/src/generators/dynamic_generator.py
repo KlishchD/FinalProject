@@ -1,13 +1,12 @@
 import argparse
 import logging
+import pandas
 import random
 
-import pandas
-
-from utils.loading import load
-from utils.time import get_current_time_with_random_delta, add_random_delta
-from utils import FileConnector
-from utils.GCPConnector import GCPConnector
+from Utils import FileConnector
+from Utils.GCPConnector import GCPConnector
+from Utils.loading import *
+from Utils.time import *
 
 
 def generate_oder_id(min_order_id: int,
