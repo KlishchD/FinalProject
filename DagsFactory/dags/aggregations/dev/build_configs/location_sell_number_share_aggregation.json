@@ -1,0 +1,14 @@
+
+{
+  "result_filepath": "dags/aggregations/dev/dags/location_sell_number_share_aggregation.py",
+  "mode": "dev",
+  "dag_parameters": {
+    "dag_id": "location_sell_number_aggregation",
+    "schedule_interval": "None",
+    "configs_filepath": "/usr/local/airflow/dags/aggregations/configs/location_sell_number_share_aggregation_config.json",
+    "job_filepath": "/usr/local/airflow/dags/aggregations/aggregations.jar",
+    "job_name": "locationsSellShare",
+    "spark_app_name": "location_sell_number",
+    "spark_master": "local[*]"
+  }
+}
