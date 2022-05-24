@@ -9,7 +9,8 @@ with DAG(dag_id='$dag_id', start_date=pendulum.parse('2020/01/01'), schedule_int
 
     create_cluster = DataprocCreateClusterOperator(
         task_id="set_up_temporary_cluster",
-        cluster_config=$cluster_config,
+        cluster_config=
+        $cluster_config,
         region='$region',
         gcp_conn_id='$gcp_connection_id',
         cluster_name="tempcluster"

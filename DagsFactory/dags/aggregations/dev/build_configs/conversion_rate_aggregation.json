@@ -1,4 +1,3 @@
-
 {
   "result_filepath": "dags/aggregations/dev/dags/conversion_rate_aggregation.py",
   "mode": "dev",
@@ -9,6 +8,7 @@
     "job_filepath": "/usr/local/airflow/dags/aggregations/aggregations.jar",
     "job_name": "conversionRate",
     "spark_app_name": "conversion_rate",
-    "spark_master": "local[*]"
+    "spark_master": "local[*]",
+    "requirements": "/usr/local/airflow/dags/aggregations/requirements.txt"
   }
 }

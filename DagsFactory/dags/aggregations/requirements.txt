@@ -1,0 +1,2 @@
+de.halcony:scala-argparse_2.13:1.1.11
+org.postgresql:postgresql:42.3.3

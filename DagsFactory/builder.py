@@ -11,7 +11,12 @@ def replace_parameters(parameters: dict, line: str) -> str:
     :return: line with replaced marks
     """
     for key, value in parameters.items():
-        line = line.replace(f"${key}", str(value))
+        try:
+            space_count = line.find(f"${key}")
+            indent = "".join([" " for _ in range(space_count)])
+            line = line.replace(f"${key}", value.replace("\n", "\n" + indent))
+        except:
+            pass
     return line
 
 
@@ -46,6 +51,14 @@ def parse_cluster_size(parameters: dict) -> None:
     parameters["dag_parameters"]["cluster_config"] = json.load(open(f"cluster_sizes/{cluster_size}_size.json"))
 
 
+def cast_all_values_to_string(parameters: dict) -> None:
+    for key in parameters:
+        if type(parameters[key]) is dict:
+            parameters[key] = json.dumps(parameters[key], indent=4)
+        else:
+            parameters[key] = str(parameters[key])
+
+
 def __main__():
     filepath = sys.argv[1]
     templates_dir_path = sys.argv[2] if len(sys.argv) > 2 else "."
@@ -53,6 +66,7 @@ def __main__():
         parameters = json.load(open(file))
         if parameters["mode"] == "prod":
             parse_cluster_size(parameters)
+        cast_all_values_to_string(parameters["dag_parameters"])
         generate_dag(parameters, templates_dir_path)
 
 
