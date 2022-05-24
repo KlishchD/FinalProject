@@ -6,8 +6,8 @@ from datetime import datetime
 from kafka import KafkaProducer
 from time import sleep
 
-from utils.loading import load
-from utils.time import generate_random_timedelta
+from Utils.loading import load
+from Utils.time import generate_random_timedelta
 
 MOVES = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
 TIME_FOR_LAST_GENERATED_SQUARES = {}
