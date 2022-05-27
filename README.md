@@ -21,5 +21,4 @@ Infrastructure was built using Docker compose and has such services:
 4) Redis to store results of preprocessing (port 6060);
 5) Kafka (port 9092)
 
-
-    
+<a href="https://docs.google.com/document/d/1s5rg-XkeKOhO8VthK8G41NxrOiri5odCX3C2aT3BJ-o/edit#heading=h.arxijj8hp70v">Full documentation</a>
