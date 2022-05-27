@@ -24,6 +24,6 @@ mkdir preprocessing/dags
 
 cd ../..
 
-docker-compose up --build
+docker-compose up -d --build
 
 docker exec webserver airflow users create -r Admin -u admin -p admin -f admin -l admin -e admin@admin.com
